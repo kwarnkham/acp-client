@@ -13,7 +13,7 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 
 
 const { configure } = require('quasar/wrappers');
-
+const env = require("dotenv").config().parsed
 module.exports = configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
@@ -28,6 +28,7 @@ module.exports = configure(function (ctx) {
     boot: [
       'i18n',
       'axios',
+      'fbsdk'
     ],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
@@ -51,8 +52,8 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
-
+      vueRouterMode: 'history', // available values: 'hash', 'history'
+      env,
       // transpile: false,
       // publicPath: '/',
 
@@ -83,7 +84,7 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-devServer
     devServer: {
       server: {
-        type: 'http'
+        type: 'https'
       },
       port: 8080,
       open: false // opens browser window automatically
@@ -104,7 +105,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: ['Loading', 'LoadingBar', 'LocalStorage', 'Dialog', 'Notify']
     },
 
     // animations: 'all', // --- includes all animations
