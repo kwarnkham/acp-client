@@ -1,5 +1,5 @@
 export default {
-  name: 'Name',
+  name: 'အမည်',
   password: 'Password',
   login: 'Login'
 }

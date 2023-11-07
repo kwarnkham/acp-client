@@ -6,13 +6,7 @@
 
         <q-toolbar-title> Quasar App </q-toolbar-title>
 
-        <q-btn
-          icon="facebook"
-          flat
-          @click="login"
-          v-if="appStore.getFbLoginStatus?.status != 'connected'"
-        />
-        <q-btn icon="logout" flat @click="logout" v-else />
+        <LanguageToggleButton />
       </q-toolbar>
     </q-header>
 
@@ -23,8 +17,5 @@
 </template>
 
 <script setup>
-import useFacebook from "src/composables/facebook";
-import { useAppStore } from "src/stores/app";
-const { login, logout } = useFacebook();
-const appStore = useAppStore();
+import LanguageToggleButton from "src/components/LanguageToggleButton.vue";
 </script>

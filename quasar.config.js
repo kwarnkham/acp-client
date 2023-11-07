@@ -14,6 +14,7 @@ const ESLintPlugin = require('eslint-webpack-plugin')
 
 const { configure } = require('quasar/wrappers');
 const env = require("dotenv").config().parsed
+console.log(env)
 module.exports = configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
@@ -28,7 +29,9 @@ module.exports = configure(function (ctx) {
     boot: [
       'i18n',
       'axios',
-      'fbsdk'
+      'fbsdk',
+      'router-auth',
+      'global-properties'
     ],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
