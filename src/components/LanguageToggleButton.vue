@@ -29,5 +29,4 @@ const toggleLanguage = () => {
     localStorage.set("language", changedLanguage);
   });
 };
-console.log(locale.value);
 </script>
