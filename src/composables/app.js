@@ -22,6 +22,7 @@ export default function useApp () {
           url: "logout",
         }).finally(() => {
           localStorage.remove("token");
+          localStorage.remove("user");
           instance.defaults.headers.common["Authorization"] = undefined;
           notify({
             message: t("loggedOut"),

@@ -2,8 +2,8 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar>
+        <q-btn icon="keyboard_arrow_left" flat @click="$router.go(-1)" />
         <q-toolbar-title> Quasar App </q-toolbar-title>
-
         <LanguageToggleButton />
       </q-toolbar>
     </q-header>

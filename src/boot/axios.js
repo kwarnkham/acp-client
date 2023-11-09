@@ -5,14 +5,18 @@ import { Loading, LocalStorage, Notify } from 'quasar';
 
 const instance = axios.create({ baseURL: process.env.API_URL + '/api/' })
 instance.defaults.headers.common['Accept'] = 'application/json';
-const api = ({ method, url, data, showLoading = false }) => {
+const api = ({ method, url, data, showLoading = false, asForm = false }) => {
   if (showLoading) Loading.show()
   return new Promise((resolve, reject) => {
-    instance({
+    const options = {
       url,
       data,
       method
-    }).then(response => {
+    }
+    if (asForm) options.headers = {
+      "Content-Type": "multipart/form-data",
+    }
+    instance(options).then(response => {
       resolve(response)
     }).catch(e => {
       Notify.create({
