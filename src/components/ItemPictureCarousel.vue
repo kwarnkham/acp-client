@@ -29,6 +29,7 @@
           color="negative"
           icon="delete_forever"
           @click="deletePicture(modelValue)"
+          v-if="user.is_admin"
         />
         <q-btn
           push
@@ -60,10 +61,11 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["update:modelValue", "picture:deleted"]);
-const { notify, dialog } = useQuasar();
+const { notify, dialog, localStorage } = useQuasar();
 const { t } = useI18n();
 const autoplay = ref(true);
 const fullscreen = ref(false);
+const user = localStorage.getItem("user");
 const deletePicture = (id) => {
   autoplay.value = false;
   dialog({

@@ -13,5 +13,6 @@ export default {
   create: 'Create',
   update: 'Update',
   doYouWantToDelete: "Do you want to delete?",
-  deleted: 'Deleted'
+  deleted: 'Deleted',
+  itemDetails: 'Item Details'
 }
