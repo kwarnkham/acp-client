@@ -7,4 +7,8 @@
 import useFacebook from "src/composables/facebook";
 
 const { login, fbLogout, isLoggedIn } = useFacebook();
+
+defineExpose({
+  facebookBtnAction: isLoggedIn() ? fbLogout : login,
+});
 </script>

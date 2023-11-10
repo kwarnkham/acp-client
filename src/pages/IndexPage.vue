@@ -1,9 +1,5 @@
 <template>
-  <q-page>
-    <ItemForm />
-  </q-page>
+  <q-page> </q-page>
 </template>
 
-<script setup>
-import ItemForm from "src/components/ItemForm.vue";
-</script>
+<script setup></script>

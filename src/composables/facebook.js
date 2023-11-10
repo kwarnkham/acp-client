@@ -48,12 +48,15 @@ export default function useFacebook () {
 
   const fbLogout = () => {
     loading.show()
-    FB.logout((response) => {
-      appStore.setFbLoginStatus(response);
-      logout({ force: true }).finally(() => {
-        loading.hide()
-      })
+    FB.getLoginStatus(function () {
+      FB.logout((response) => {
+        appStore.setFbLoginStatus(response);
+        logout({ force: true }).finally(() => {
+          loading.hide()
+        })
+      });
     });
+
   };
 
   const isLoggedIn = () => {

@@ -43,7 +43,11 @@
             </div>
           </div>
           <q-separator spaced />
-          <ItemPictureCarousel :pictures="item.pictures" v-model="slide" />
+          <ItemPictureCarousel
+            :pictures="item.pictures"
+            v-model="slide"
+            v-if="item.pictures.length"
+          />
         </q-card-section>
       </q-card>
     </q-expansion-item>

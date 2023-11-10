@@ -14,7 +14,7 @@ export default function useApp () {
 
   }
 
-  const logout = ({ force = true }) => {
+  const logout = ({ force = false } = {}) => {
     return new Promise((resolve, reject) => {
       const apiLogout = () => {
         api({

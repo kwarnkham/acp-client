@@ -14,5 +14,6 @@ export default {
   update: 'Update',
   doYouWantToDelete: "Do you want to delete?",
   deleted: 'Deleted',
-  itemDetails: 'Item Details'
+  itemDetails: 'Item Details',
+  logout: 'Logout'
 }
