@@ -76,6 +76,7 @@ onMounted(() => {
     url: `items/${itemId}`,
   }).then(({ data }) => {
     item.value = data.item;
+    slide.value = item.value.pictures[0]?.id ?? 1;
   });
 });
 </script>
