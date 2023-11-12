@@ -11,6 +11,7 @@ export default function useFacebook () {
   const { loading } = useQuasar()
 
   const login = () => {
+    if (!window.FB) return;
     loading.show()
     if (appStore.getFbLoginStatus.status != "connected") {
       FB.login(
@@ -47,6 +48,7 @@ export default function useFacebook () {
   };
 
   const fbLogout = () => {
+    if (!window.FB) return;
     loading.show()
     FB.getLoginStatus(function () {
       FB.logout((response) => {

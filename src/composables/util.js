@@ -18,7 +18,11 @@ export default function useUtil () {
     return formData;
   }
 
+  const toThreeDigits = (code) => {
+    return code.toString().padStart(3, "0")
+  }
+
   return {
-    vhPage, buildForm
+    vhPage, buildForm, toThreeDigits
   }
 }

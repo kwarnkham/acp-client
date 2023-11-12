@@ -15,5 +15,8 @@ export default {
   doYouWantToDelete: "Do you want to delete?",
   deleted: 'Deleted',
   itemDetails: 'Item Details',
-  logout: 'Logout'
+  logout: 'Logout',
+  buyTicket: 'Buy ticket',
+  ticketNumber: 'Ticket number',
+  phoneNumber: 'Phone number'
 }
