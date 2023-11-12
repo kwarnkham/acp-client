@@ -24,13 +24,13 @@
             <div class="col-12" v-if="item.description">
               {{ item.description }}
             </div>
-            <div class="col-6">
+            <div class="col-12">
               {{ $t("totalNumberOfTickets") }} : {{ item.max_tickets }}
             </div>
-            <div class="col-6 text-right">
+            <div class="col-12">
               {{ $t("pricePerTicket") }} : {{ item.price_per_ticket }}
             </div>
-            <div class="col-12 text-center">
+            <div class="col-12" v-if="user.is_admin">
               {{ $t("itemPrice") }} : {{ item.price }}
             </div>
             <div class="col-12" v-if="item.note">
@@ -58,9 +58,18 @@
             v-for="ticket in pagination.data"
             :key="ticket.id"
             :color="getTicketColor(ticket.status)"
-            @click="book(ticket)"
+            @click="
+              ticket.status == 1
+                ? book(ticket)
+                : $router.push({
+                    name: 'ticket-details',
+                    params: {
+                      id: ticket.id,
+                    },
+                  })
+            "
           >
-            {{ toThreeDigits(ticket.code) }}
+            {{ toDigits(ticket.code, String(item.max_tickets).length - 1) }}
           </q-btn>
         </q-card-section>
       </q-card>
@@ -84,7 +93,7 @@ const { localStorage, dialog } = useQuasar();
 const user = localStorage.getItem("user");
 const slide = ref(1);
 const { t } = useI18n();
-const { toThreeDigits } = useUtil();
+const { toDigits } = useUtil();
 const { pagination } = usePagination("tickets", {
   item_id: route.params.id,
   per_page: 10000,
@@ -95,7 +104,7 @@ const router = useRouter();
 const book = (ticket) => {
   dialog({
     title: t("buyTicket"),
-    message: `${t("ticketNumber")} : ${toThreeDigits(ticket.code)}`,
+    message: `${t("ticketNumber")} : ${toDigits(ticket.code)}`,
     noBackdropDismiss: true,
     cancel: true,
     prompt: {
