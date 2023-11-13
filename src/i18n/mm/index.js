@@ -18,5 +18,15 @@ export default {
   logout: 'Logout',
   buyTicket: 'Buy ticket',
   ticketNumber: 'Ticket number',
-  phoneNumber: 'Phone number'
+  phoneNumber: 'Phone number',
+  bookingExpiresIn: 'Booking expires in',
+  minute: "Minute|Minutes",
+  next: 'Next',
+  amount: 'Amount',
+  expiresIn: 'Expires In',
+  pending: "Pending",
+  paid: "Paid",
+  confirmedPaid: "Confirmed Paid",
+  pay: "Pay",
+  youMustUploadPaymentScreenshot: "You must upload payment screenshot"
 }

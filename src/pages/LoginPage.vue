@@ -31,10 +31,6 @@
       <div class="text-right">
         <q-btn icon="login" color="primary" type="submit" />
       </div>
-      <q-separator spaced />
-      <div class="text-center">
-        <FacebookAuthButton style="width: 300px" />
-      </div>
     </q-form>
   </q-page>
 </template>

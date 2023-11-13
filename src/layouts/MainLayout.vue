@@ -3,8 +3,17 @@
     <q-header elevated>
       <q-toolbar>
         <q-btn icon="keyboard_arrow_left" flat @click="$router.go(-1)" />
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title
+          @click="
+            $router.push({
+              name: 'index',
+            })
+          "
+        >
+          Quasar App
+        </q-toolbar-title>
         <LanguageToggleButton />
+        <q-btn icon="login" />
       </q-toolbar>
     </q-header>
 

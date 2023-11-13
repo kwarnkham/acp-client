@@ -28,6 +28,18 @@
       required
     />
     <q-input
+      :label="$t('bookingExpiresIn')"
+      v-model="expires_in"
+      type="number"
+      mode="numeric"
+      pattern="[0-9]*"
+      required
+    >
+      <template v-slot:append>
+        <span>{{ $t("minute", 2) }}</span>
+      </template>
+    </q-input>
+    <q-input
       :label="$t('description')"
       v-model="description"
       autogrow
@@ -60,10 +72,11 @@ const { buildForm } = useUtil();
 const name = ref(props.item.name ?? "");
 const max = ref("100");
 const description = ref(props.item.description ?? "");
-const pricePerTicket = ref(props.item.price_per_ticket ?? "");
-const price = ref(props.item.price ?? "");
-const note = ref(props.item.note ?? "");
-const pictures = ref();
+const pricePerTicket = ref(props.item.latest_round?.price_per_ticket ?? "");
+const price = ref(props.item.latest_round?.price ?? "");
+const note = ref(props.item.latest_round?.note ?? "");
+const expires_in = ref(60);
+const pictures = ref([]);
 const router = useRouter();
 
 const submit = () => {
@@ -81,6 +94,7 @@ const submit = () => {
       note: note.value,
       description: description.value,
       pictures: pictures.value,
+      expires_in: expires_in.value,
       _method: props.item.id ? "PUT" : "POST",
     }),
   }).then(({ data }) => {
