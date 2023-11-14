@@ -47,5 +47,21 @@ export default function useApp () {
         });
     })
   };
-  return { preserveUser, logout }
+  const orderStatusToText = (status) => {
+    switch (status) {
+      case 1:
+        return "pending";
+      case 2:
+        return "paid";
+      case 3:
+        return "confirmedPaid";
+      case 4:
+        return "expired";
+      case 5:
+        return "canceled";
+      default:
+        return ""
+    }
+  };
+  return { preserveUser, logout, orderStatusToText }
 }

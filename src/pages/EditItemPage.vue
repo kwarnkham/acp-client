@@ -22,7 +22,6 @@ const item = ref(null);
 const slide = ref(1);
 
 const deletePicture = (id) => {
-  console.log(id);
   item.value.pictures.splice(
     item.value.pictures.findIndex((e) => e.id == id),
     1

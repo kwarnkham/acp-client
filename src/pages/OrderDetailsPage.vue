@@ -24,13 +24,18 @@
       {{ $t("amount") }} : {{ order.amount }}
     </q-banner>
 
-    <q-banner dense rounded class="bg-grey-9 text-white">
+    <q-banner
+      dense
+      rounded
+      class="bg-grey-9 text-white"
+      v-if="[1, 2].includes(order.status)"
+    >
       <template v-slot:avatar>
         <q-icon name="info" color="warning" />
       </template>
       {{ $t("expiresIn") }} : {{ timeRemaining }}
     </q-banner>
-    <q-form @submit.prevent="submit" v-if="order.status != 3">
+    <q-form @submit.prevent="submit" v-if="[1, 2].includes(order.status)">
       <FileInput :multiple="false" v-model="picture" />
       <q-input :label="$t('note')" v-model="note" />
       <div class="q-mt-md">
@@ -43,8 +48,17 @@
         />
       </div>
     </q-form>
-    <div v-else>
+    <div v-if="order.screenshot" class="q-mt-xs">
       <q-img :src="order.screenshot" v-if="order.screenshot" />
+    </div>
+    <div class="q-mt-md" v-if="[1, 2].includes(order.status)">
+      <q-btn
+        :label="$t('cancel')"
+        no-caps
+        class="full-width"
+        color="negative"
+        @click="cancelOrder"
+      />
     </div>
   </q-page>
 </template>
@@ -53,17 +67,19 @@
 import { date, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import FileInput from "src/components/FileInput.vue";
+import useApp from "src/composables/app";
 import useUtil from "src/composables/util";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 const { getDateDiff } = date;
 
-const { notify } = useQuasar();
+const { notify, dialog } = useQuasar();
 const route = useRoute();
 const { toDigits, buildForm } = useUtil();
 const { t } = useI18n();
 const order = ref(null);
+const { orderStatusToText } = useApp();
 const getTimeRemaining = () => {
   const date = new Date(
     getDateDiff(new Date(order.value.expires_at), new Date(), "seconds") * 1000
@@ -81,6 +97,21 @@ const getTimeRemaining = () => {
 
 const picture = ref();
 const note = ref("");
+
+const cancelOrder = () => {
+  dialog({
+    title: t("confirm"),
+    cancel: true,
+    noBackdropDismiss: true,
+  }).onOk(() => {
+    api({
+      method: "post",
+      url: `orders/${order.value.id}/cancel`,
+    }).then(({ data }) => {
+      order.value = data.order;
+    });
+  });
+};
 const submit = () => {
   if (!picture.value) {
     notify({
@@ -102,16 +133,6 @@ const submit = () => {
   });
 };
 
-const orderStatusToText = (status) => {
-  switch (status) {
-    case 1:
-      return "pending";
-    case 2:
-      return "paid";
-    case 3:
-      return "confirmedPaid";
-  }
-};
 const timeRemaining = ref();
 let intervalId;
 
@@ -122,13 +143,14 @@ onMounted(() => {
   }).then(({ data }) => {
     order.value = data.order;
     timeRemaining.value = getTimeRemaining();
-    intervalId = setInterval(() => {
-      timeRemaining.value = getTimeRemaining();
-    }, 1000);
+    if (order.value.status != 3)
+      intervalId = setInterval(() => {
+        timeRemaining.value = getTimeRemaining();
+      }, 1000);
   });
 });
 
 onBeforeUnmount(() => {
-  clearInterval(intervalId);
+  if (intervalId) clearInterval(intervalId);
 });
 </script>

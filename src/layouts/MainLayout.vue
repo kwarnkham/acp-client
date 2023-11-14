@@ -13,7 +13,6 @@
           Quasar App
         </q-toolbar-title>
         <LanguageToggleButton />
-        <q-btn icon="login" />
       </q-toolbar>
     </q-header>
 

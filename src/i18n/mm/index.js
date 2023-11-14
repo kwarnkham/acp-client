@@ -28,5 +28,12 @@ export default {
   paid: "Paid",
   confirmedPaid: "Confirmed Paid",
   pay: "Pay",
-  youMustUploadPaymentScreenshot: "You must upload payment screenshot"
+  youMustUploadPaymentScreenshot: "You must upload payment screenshot",
+  item: "Item|Items",
+  order: "Order|Orders",
+  user: "User|Users",
+  expired: "Expired",
+  number: "Number|Numbers",
+  canceled: "Canceled",
+  cancel: "Cancel",
 }

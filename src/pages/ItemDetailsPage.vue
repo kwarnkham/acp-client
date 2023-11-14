@@ -1,7 +1,7 @@
 <template>
   <q-page padding class="bg-grey-3 column" v-if="item" :style-fn="vhPage">
     <div class="col overflow-auto">
-      <q-expansion-item icon="info" :label="$t('itemDetails')" default-opened>
+      <q-expansion-item icon="info" :label="$t('itemDetails')">
         <q-card>
           <q-card-section>
             <div class="text-center text-subtitle1 q-mb-sm q-gutter-x-sm">
@@ -54,7 +54,7 @@
           </q-card-section>
         </q-card>
       </q-expansion-item>
-      <q-expansion-item icon="info" :label="$t('itemDetails')" default-opened>
+      <q-expansion-item icon="info" :label="$t('number')" default-opened>
         <q-card>
           <q-card-section class="row justify-between q-gutter-sm">
             <q-btn
@@ -109,9 +109,8 @@ const { vhPage } = useUtil();
 
 const selectCode = (code) => {
   const index = item.value.latest_round.order_details.findIndex(
-    (e) => e.pivot.code == code
+    (e) => e.pivot.code == code && ![4, 5].includes(e.status)
   );
-  console.log(index);
   if (index == -1) {
     if (!selectedCodes.value.includes(code)) selectedCodes.value.push(code);
     else
@@ -157,7 +156,7 @@ const getTicketColor = (code) => {
   if (selectedCodes.value.includes(code)) return "green";
 
   const found = item.value.latest_round.order_details.find(
-    (e) => e.pivot.code == code
+    (e) => e.pivot.code == code && ![4, 5].includes(e.status)
   );
   if (found != null) {
     if (found.status == 3) return "red";
