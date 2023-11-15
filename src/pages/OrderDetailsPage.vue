@@ -13,9 +13,12 @@
         ({{ $t(orderStatusToText(order.status)) }})
       </div>
     </div>
+    <div class="text-subtitle2">
+      <q-icon color="green" name="phone" size="sm" />{{ order.user.phone }}
+    </div>
     <div>{{ $t("name") }}: {{ order.round.item.name }}</div>
     <div>{{ $t("description") }}: {{ order.round.item.description }}</div>
-    <div class="row q-gutter-x-sm">
+    <div class="row q-gutter-sm">
       <q-btn v-for="details in order.rounds" :key="details.id" color="green">
         {{ toDigits(details.pivot.code) }}
       </q-btn>
@@ -28,7 +31,7 @@
       dense
       rounded
       class="bg-grey-9 text-white"
-      v-if="[1, 2].includes(order.status)"
+      v-if="[1].includes(order.status)"
     >
       <template v-slot:avatar>
         <q-icon name="info" color="warning" />

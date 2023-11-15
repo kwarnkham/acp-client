@@ -3,49 +3,12 @@
     <q-input :label="$t('name')" v-model="name" required autofocus />
 
     <q-input
-      :label="$t('totalNumberOfTickets')"
-      v-model="max"
-      type="number"
-      mode="numeric"
-      pattern="[0-9]*"
-      required
-      v-if="!item.id"
-    />
-    <q-input
-      :label="$t('pricePerTicket')"
-      v-model="pricePerTicket"
-      type="number"
-      mode="numeric"
-      pattern="[0-9]*"
-      required
-    />
-    <q-input
-      :label="$t('itemPrice')"
-      v-model="price"
-      type="number"
-      mode="numeric"
-      pattern="[0-9]*"
-      required
-    />
-    <q-input
-      :label="$t('bookingExpiresIn')"
-      v-model="expires_in"
-      type="number"
-      mode="numeric"
-      pattern="[0-9]*"
-      required
-    >
-      <template v-slot:append>
-        <span>{{ $t("minute", 2) }}</span>
-      </template>
-    </q-input>
-    <q-input
       :label="$t('description')"
       v-model="description"
       autogrow
       outlined
     />
-    <q-input :label="$t('note')" v-model="note" autogrow outlined />
+
     <FileInput multiple v-model="pictures" />
     <div class="text-right q-mt-sm">
       <q-btn :label="$t(item.id ? 'update' : 'create')" no-caps type="submit" />

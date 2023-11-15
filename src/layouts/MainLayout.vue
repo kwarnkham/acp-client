@@ -2,7 +2,12 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn icon="keyboard_arrow_left" flat @click="$router.go(-1)" />
+        <q-btn
+          icon="keyboard_arrow_left"
+          flat
+          @click="$router.go(-1)"
+          v-if="!['login', 'index'].includes($route.name)"
+        />
         <q-toolbar-title
           @click="
             $router.push({
@@ -10,7 +15,7 @@
             })
           "
         >
-          Quasar App
+          Lucky Mee Mee
         </q-toolbar-title>
         <LanguageToggleButton />
       </q-toolbar>

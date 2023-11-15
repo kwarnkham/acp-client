@@ -18,6 +18,10 @@
         <q-item-section>
           <q-item-label>#{{ order.id }}</q-item-label>
           <q-item-label caption>{{ order.round.item.name }}</q-item-label>
+          <q-item-label overline>
+            <q-icon name="phone" color="green" size="sm" />
+            {{ order.user.phone }}
+          </q-item-label>
         </q-item-section>
         <q-item-section side>
           <q-item-label>{{ order.amount }}</q-item-label>

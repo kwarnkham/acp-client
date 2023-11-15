@@ -14,6 +14,17 @@
     <q-card
       @click="
         $router.push({
+          name: 'rounds',
+        })
+      "
+    >
+      <q-card-section>
+        {{ $t("round", 2) }}
+      </q-card-section>
+    </q-card>
+    <q-card
+      @click="
+        $router.push({
           name: 'orders',
         })
       "

@@ -1,7 +1,9 @@
 export default function useUtil () {
-  const vhPage = (offset, height) => ({
-    height: height - offset + "px",
-  });
+  const vhPage = (offset, height) => {
+    return {
+      height: height - offset + "px",
+    }
+  };
 
   const buildForm = (data) => {
     const keys = Object.keys(data);

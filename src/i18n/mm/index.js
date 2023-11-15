@@ -36,4 +36,6 @@ export default {
   number: "Number|Numbers",
   canceled: "Canceled",
   cancel: "Cancel",
+  newRound: "New round",
+  round: "Round|Rounds"
 }
