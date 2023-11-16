@@ -78,11 +78,13 @@
     <div
       class="col-12 absolute-center full-width row flex-center text-center text-h4 text-white"
       style="background-color: rgba(0, 0, 0, 0.5)"
-      v-if="!user?.is_admin"
+      v-if="!user?.is_admin && round.status == 2"
     >
       <div>
         <div>{{ $t("theRoundIsFinished") }}</div>
-        <div><q-btn :label="round.ticket.code" color="purple" size="lg" /></div>
+        <div>
+          <q-btn :label="round.ticket?.code" color="purple" size="lg" />
+        </div>
       </div>
     </div>
   </q-page>
