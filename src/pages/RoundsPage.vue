@@ -16,7 +16,9 @@
         "
       >
         <q-item-section>
-          <q-item-label>#{{ round.id }}</q-item-label>
+          <q-item-label :class="{ 'text-positive': round.ticket != null }"
+            >#{{ round.id }}</q-item-label
+          >
           <q-item-label caption>{{ round.item.name }}</q-item-label>
           <q-item-label overline>{{ round.item.description }}</q-item-label>
         </q-item-section>

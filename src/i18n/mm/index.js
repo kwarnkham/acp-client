@@ -37,5 +37,13 @@ export default {
   canceled: "Canceled",
   cancel: "Cancel",
   newRound: "New round",
-  round: "Round|Rounds"
+  round: "Round|Rounds",
+  linkCopiedToClippoard: "Link copied to clippoard",
+  available: "Available",
+  booked: "Booked",
+  soldOut: "Sold Out",
+  selected: "Selected",
+  order: "Order|Orders",
+  home: "Home",
+  setting: "Setting|Settings"
 }

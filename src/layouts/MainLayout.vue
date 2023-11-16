@@ -6,7 +6,7 @@
           icon="keyboard_arrow_left"
           flat
           @click="$router.go(-1)"
-          v-if="!['login', 'index'].includes($route.name)"
+          v-if="!['login', 'index'].includes($route.name) && user"
         />
         <q-toolbar-title
           @click="
@@ -25,19 +25,26 @@
       <router-view />
     </q-page-container>
 
-    <q-footer elevated>
+    <q-footer elevated v-if="user">
       <q-tabs v-model="tab" no-caps>
         <q-route-tab
           name="home"
           icon="home"
-          label="Home"
+          :label="$t('home')"
           :to="{ name: 'index' }"
+          exact
+        />
+        <q-route-tab
+          name="orders"
+          icon="category"
+          :label="$t('order', 2)"
+          :to="{ name: 'orders' }"
           exact
         />
         <q-route-tab
           name="settings"
           icon="settings"
-          label="Setting"
+          :label="$t('setting', 2)"
           :to="{ name: 'settings' }"
           exact
         />
@@ -47,8 +54,11 @@
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
 import LanguageToggleButton from "src/components/LanguageToggleButton.vue";
 import { ref } from "vue";
 
 const tab = ref("home");
+const { localStorage } = useQuasar();
+const user = localStorage.getItem("user");
 </script>

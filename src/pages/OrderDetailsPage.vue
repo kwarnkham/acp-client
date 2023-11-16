@@ -19,12 +19,26 @@
     <div>{{ $t("name") }}: {{ order.round.item.name }}</div>
     <div>{{ $t("description") }}: {{ order.round.item.description }}</div>
     <div class="row q-gutter-sm">
-      <q-btn v-for="details in order.rounds" :key="details.id" color="green">
-        {{ toDigits(details.pivot.code) }}
+      <q-btn v-for="details in order.tickets" :key="details.id" color="green">
+        {{
+          toDigits(
+            details.pivot.code,
+            String(order.round.max_tickets).length - 1
+          )
+        }}
       </q-btn>
     </div>
     <q-banner dense class="bg-primary text-white q-my-sm" rounded>
       {{ $t("amount") }} : {{ order.amount }}
+    </q-banner>
+
+    <q-banner
+      dense
+      class="bg-info text-white q-my-sm"
+      rounded
+      v-if="order.note"
+    >
+      {{ $t("note") }} : {{ order.note }}
     </q-banner>
 
     <q-banner
