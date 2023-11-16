@@ -1,5 +1,10 @@
 <template>
-  <q-page padding v-if="round" :style-fn="vhPage" class="column no-wrap">
+  <q-page
+    padding
+    v-if="round"
+    :style-fn="vhPage"
+    class="column no-wrap relative-position"
+  >
     <div class="row q-gutter-y-xs">
       <div
         class="col-12 text-h6 text-center"
@@ -69,6 +74,16 @@
         color="primary"
         @click="book"
       />
+    </div>
+    <div
+      class="col-12 absolute-center full-width row flex-center text-center text-h4 text-white"
+      style="background-color: rgba(0, 0, 0, 0.5)"
+      v-if="!user?.is_admin"
+    >
+      <div>
+        <div>{{ $t("theRoundIsFinished") }}</div>
+        <div><q-btn :label="round.ticket.code" color="purple" size="lg" /></div>
+      </div>
     </div>
   </q-page>
 </template>

@@ -45,5 +45,6 @@ export default {
   selected: "Selected",
   order: "Order|Orders",
   home: "Home",
-  setting: "Setting|Settings"
+  setting: "Setting|Settings",
+  theRoundIsFinished: "The round is finished",
 }
