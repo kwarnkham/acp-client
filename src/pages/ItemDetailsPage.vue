@@ -54,12 +54,7 @@ import RoundForm from "src/components/RoundForm.vue";
 
 const route = useRoute();
 const item = ref(null);
-const { localStorage, dialog } = useQuasar();
-const user = localStorage.getItem("user");
 const slide = ref(1);
-const { t } = useI18n();
-
-const router = useRouter();
 
 const { vhPage } = useUtil();
 

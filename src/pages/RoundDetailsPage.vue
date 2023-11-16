@@ -23,7 +23,7 @@
         {{ $t("pricePerTicket") }} :
         {{ round.price_per_ticket }}
       </div>
-      <div class="col-12" v-if="user?.is_admin">
+      <div class="col-12" v-if="appStore.getUser?.is_admin">
         {{ $t("itemPrice") }} : {{ round.price }}
       </div>
       <div class="col-12" v-if="round.note">
@@ -37,7 +37,12 @@
     </div>
     <div class="justify-between row">
       <q-btn :label="$t('available')" no-caps />
-      <q-btn :label="$t('selected')" no-caps color="green" v-if="user" />
+      <q-btn
+        :label="$t('selected')"
+        no-caps
+        color="green"
+        v-if="appStore.getUser"
+      />
       <q-btn :label="$t('booked')" no-caps color="orange" />
       <q-btn :label="$t('soldOut')" no-caps color="red" />
     </div>
@@ -66,7 +71,7 @@
       </q-card-section>
     </q-card>
 
-    <div class="q-mt-sm" v-if="selectedCodes.length && user">
+    <div class="q-mt-sm" v-if="selectedCodes.length">
       <q-btn
         :label="$t('next')"
         no-caps
@@ -78,7 +83,7 @@
     <div
       class="col-12 absolute-center full-width row flex-center text-center text-h4 text-white"
       style="background-color: rgba(0, 0, 0, 0.5)"
-      v-if="!user?.is_admin && round.status == 2"
+      v-if="!appStore.getUser?.is_admin && round.status == 2"
     >
       <div>
         <div>{{ $t("theRoundIsFinished") }}</div>
@@ -93,20 +98,24 @@
 <script setup>
 import { copyToClipboard, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
+import UserFormDialog from "src/components/UserFormDialog.vue";
+import useApp from "src/composables/app";
 import useUtil from "src/composables/util";
+import { useAppStore } from "src/stores/app";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
 const { vhPage } = useUtil();
 const { t } = useI18n();
-const { localStorage, dialog, notify } = useQuasar();
+const { dialog, notify } = useQuasar();
 const round = ref(null);
 const route = useRoute();
-const user = localStorage.getItem("user");
 const { toDigits } = useUtil();
 const selectedCodes = ref([]);
 const router = useRouter();
+const { preserveUser } = useApp();
+const appStore = useAppStore();
 
 const settle = () => {
   dialog({
@@ -148,7 +157,6 @@ const copyLinkToClipboard = () => {
 };
 
 const selectCode = (code) => {
-  if (!user) return;
   const index = round.value.order_details.findIndex(
     (e) => e.pivot.code == code - 1 && ![4, 5].includes(e.status)
   );
@@ -176,35 +184,62 @@ const getTicketColor = (code) => {
 };
 
 const book = () => {
-  dialog({
-    title: t("buyTicket"),
-    noBackdropDismiss: true,
-    cancel: true,
-    prompt: {
-      model: "",
-      label: t("phoneNumber"),
-      isValid: (val) => val != "",
-      type: "tel",
-      autofocus: true,
-    },
-  }).onOk((phoneNumber) => {
+  const sendBookRequest = ({ phone, name }) => {
+    const url = appStore.getUser ? "orders" : "orders/guest";
     api({
       method: "POST",
-      url: `orders`,
+      url,
       data: {
-        phone: phoneNumber,
+        name: name,
+        phone: phone,
         round_id: round.value.id,
         codes: selectedCodes.value.map((e) => e - 1),
       },
     }).then(({ data }) => {
-      router.push({
-        name: "order-details",
-        params: {
-          id: data.order.id,
-        },
+      const orderData = data.order;
+      if (!appStore.getUser)
+        api({
+          method: "POST",
+          url: "login",
+          data: {
+            name: phone,
+            password: phone,
+          },
+        }).then(({ data }) => {
+          preserveUser(data);
+          router.push({
+            name: "order-details",
+            params: {
+              id: orderData.id,
+            },
+          });
+        });
+      else
+        router.push({
+          name: "order-details",
+          params: {
+            id: orderData.id,
+          },
+        });
+    });
+  };
+  if (!appStore.getUser || appStore.getUser.is_admin)
+    dialog({
+      component: UserFormDialog,
+    }).onOk(({ phone, name }) => {
+      sendBookRequest({ phone, name });
+    });
+  else
+    dialog({
+      title: t("confirm"),
+      noBackdropDismiss: true,
+      cancel: true,
+    }).onOk(() => {
+      sendBookRequest({
+        phone: appStore.getUser.phone,
+        name: appStore.getUser.name,
       });
     });
-  });
 };
 
 onMounted(() => {

@@ -37,7 +37,7 @@
     <q-page-sticky
       position="bottom-right"
       :offset="[18, 18]"
-      v-if="user.is_admin"
+      v-if="appStore.getUser.is_admin"
     >
       <q-btn
         fab
@@ -57,16 +57,16 @@
 import { debounce, useQuasar } from "quasar";
 import usePagination from "src/composables/pagination";
 import useUtil from "src/composables/util";
+import { useAppStore } from "src/stores/app";
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
-const { localStorage } = useQuasar();
 const { pagination, lastPage, current, updateQueryAndFetch } =
   usePagination("items");
 const { vhPage } = useUtil();
 const route = useRoute();
 const name = ref(route.query.name || "");
-const user = localStorage.getItem("user");
+const appStore = useAppStore();
 
 watch(
   name,

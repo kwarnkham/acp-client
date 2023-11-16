@@ -1,5 +1,6 @@
 import { useQuasar } from "quasar"
 import { api, instance } from "src/boot/axios";
+import { useAppStore } from "src/stores/app";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
@@ -7,9 +8,10 @@ export default function useApp () {
   const { localStorage, notify, dialog } = useQuasar()
   const { t } = useI18n()
   const router = useRouter()
+  const appStore = useAppStore()
   const preserveUser = ({ user, token }) => {
     localStorage.set("token", token);
-    localStorage.set("user", user);
+    appStore.setUser(user)
     instance.defaults.headers.common["Authorization"] = "Bearer " + token;
 
   }
@@ -23,6 +25,7 @@ export default function useApp () {
         }).finally(() => {
           localStorage.remove("token");
           localStorage.remove("user");
+          appStore.setUser(null)
           instance.defaults.headers.common["Authorization"] = undefined;
           notify({
             message: t("loggedOut"),

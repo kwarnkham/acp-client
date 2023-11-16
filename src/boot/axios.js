@@ -1,6 +1,7 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 import { Loading, LocalStorage, Notify } from 'quasar';
+import { useAppStore } from 'src/stores/app';
 
 const instance = axios.create({ baseURL: process.env.API_URL + '/api/' })
 instance.defaults.headers.common['Accept'] = 'application/json';
@@ -32,7 +33,8 @@ const api = ({ method, url, data, showLoading = false, asForm = false }) => {
   })
 }
 
-export default boot(async ({ app, router }) => {
+export default boot(async ({ app, router, store }) => {
+  const appStore = useAppStore(store)
   const token = LocalStorage.getItem("token");
   if (token) {
     instance.defaults.headers.common['Authorization'] = "Bearer " + token;
@@ -42,7 +44,7 @@ export default boot(async ({ app, router }) => {
         method: "GET",
         url: "user",
       })
-      LocalStorage.set("user", response.data.user)
+      appStore.setUser(response.data.user)
     } catch (error) {
       LocalStorage.remove('token')
       instance.defaults.headers.common['Authorization'] = undefined;

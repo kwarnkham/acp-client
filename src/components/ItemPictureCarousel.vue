@@ -29,7 +29,7 @@
           color="negative"
           icon="delete_forever"
           @click="deletePicture(modelValue)"
-          v-if="user.is_admin"
+          v-if="appStore.getUser.is_admin"
         />
         <q-btn
           push
@@ -50,6 +50,7 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
+import { useAppStore } from "src/stores/app";
 
 const props = defineProps({
   modelValue: {
@@ -65,7 +66,8 @@ const { notify, dialog, localStorage } = useQuasar();
 const { t } = useI18n();
 const autoplay = ref(true);
 const fullscreen = ref(false);
-const user = localStorage.getItem("user");
+const appStore = useAppStore();
+
 const deletePicture = (id) => {
   autoplay.value = false;
   dialog({

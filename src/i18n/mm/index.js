@@ -47,5 +47,6 @@ export default {
   home: "Home",
   setting: "Setting|Settings",
   theRoundIsFinished: "The round is finished",
-
+  ok: "Ok",
+  cancel: 'Cancel'
 }

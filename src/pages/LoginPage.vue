@@ -37,7 +37,6 @@
 
 <script setup>
 import { ref } from "vue";
-import FacebookAuthButton from "src/components/FacebookAuthButton.vue";
 import { api } from "src/boot/axios";
 import { useRouter } from "vue-router";
 import useApp from "src/composables/app";
