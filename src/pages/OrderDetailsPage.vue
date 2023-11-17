@@ -68,6 +68,28 @@
     <div v-if="order.screenshot" class="q-mt-xs">
       <q-img :src="order.screenshot" v-if="order.screenshot" />
     </div>
+    <div class="q-pa-sm">
+      <div class="text-center">Payments Methods</div>
+      <div
+        v-for="paymentMethod in paymentMethods"
+        :key="paymentMethod.id"
+        class="q-mb-sm"
+      >
+        <div>{{ paymentMethod.name }}</div>
+        <div class="row items-center text-info">
+          <div>{{ paymentMethod.number }}</div>
+          <q-btn
+            icon="content_copy"
+            no-caps
+            flat
+            round
+            @click="copyNumber(paymentMethod.number)"
+          />
+        </div>
+        <div><q-icon name="person" />{{ paymentMethod.account_name }}</div>
+        <q-separator />
+      </div>
+    </div>
     <div
       class="q-mt-md row justify-evenly"
       v-if="[1, 2].includes(order.status)"
@@ -93,7 +115,7 @@
 </template>
 
 <script setup>
-import { date, useQuasar } from "quasar";
+import { copyToClipboard, date, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import FileInput from "src/components/FileInput.vue";
 import useApp from "src/composables/app";
@@ -125,9 +147,20 @@ const getTimeRemaining = () => {
   return formattedTime;
 };
 
+const paymentMethods = ref([]);
+
 const picture = ref();
 const note = ref("");
 const appStore = useAppStore();
+
+const copyNumber = (text) => {
+  copyToClipboard(text).then(() => {
+    notify({
+      message: t("copied"),
+      type: "info",
+    });
+  });
+};
 
 const confirmOrder = () => {
   dialog({
@@ -195,6 +228,13 @@ onMounted(() => {
       intervalId = setInterval(() => {
         timeRemaining.value = getTimeRemaining();
       }, 1000);
+  });
+
+  api({
+    method: "GET",
+    url: "payment-methods",
+  }).then(({ data }) => {
+    paymentMethods.value = data.payment_methods;
   });
 });
 

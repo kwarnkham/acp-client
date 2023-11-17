@@ -15,6 +15,10 @@ const routes = [
       { path: '/round/:id', component: () => import('pages/RoundDetailsPage.vue'), name: 'round-details' },
       { path: '/order', component: () => import('pages/OrdersPage.vue'), name: 'orders', meta: { requiresAuth: true } },
       { path: '/round', component: () => import('pages/RoundsPage.vue'), name: 'rounds', meta: { requiresAuth: true } },
+      { path: '/payments', component: () => import('pages/PaymentsPage.vue'), name: 'payments', meta: { requiresAuth: true } },
+      { path: '/payment/create', component: () => import('pages/CreatePaymentPage.vue'), name: 'create-payment', meta: { requiresAuth: true } },
+      { path: '/payemnt/:id/edit', component: () => import('pages/EditPaymentPage.vue'), name: 'edit-payment', meta: { requiresAuth: true } },
+
     ]
   },
 

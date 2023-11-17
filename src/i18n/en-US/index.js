@@ -49,5 +49,9 @@ export default {
   theRoundIsFinished: "The round is finished",
   ok: "Ok",
   cancel: 'Cancel',
-  areYouSure: 'Are you sure?'
+  areYouSure: 'Are you sure?',
+  paymentMethod: 'Payment method|Payment methods',
+  number: 'Number',
+  accountName: 'Account name',
+  copied: "Copied"
 }
