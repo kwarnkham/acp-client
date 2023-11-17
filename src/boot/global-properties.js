@@ -8,12 +8,13 @@ const laravelEcho = new Echo({
   wsHost: process.env.PUSHER_HOST,
   wsPort: process.env.PUSHER_PORT,
   wssPort: process.env.PUSHER_PORT,
-  forceTLS: false,
+  forceTLS: process.env.PROD,
   encrypted: true,
   disableStats: true,
   enabledTransports: ["ws", "wss"],
   cluster: "mt1",
 });
+console.log(process.env.PROD)
 
 export default boot(async ({ app }) => {
   window.Pusher = Pusher;

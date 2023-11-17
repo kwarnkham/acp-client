@@ -46,7 +46,7 @@
       <q-btn :label="$t('booked')" no-caps color="orange" />
       <q-btn :label="$t('soldOut')" no-caps color="red" />
     </div>
-    <div class="full-wdith q-my-sm">
+    <div class="full-wdith q-my-sm" v-if="appStore.getUser.is_admin">
       <q-btn icon="check" class="full-width" color="indigo" @click="settle" />
     </div>
     <div class="full-wdith q-my-sm">

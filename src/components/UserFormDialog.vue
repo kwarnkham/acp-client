@@ -6,12 +6,7 @@
           <template v-slot:prepend>
             <q-icon name="person" color="blue" /> </template
         ></q-input>
-        <q-input
-          :label="$t('phoneNumber')"
-          v-model="phone"
-          required
-          type="phone"
-        >
+        <q-input :label="$t('phoneNumber')" v-model="phone" required type="tel">
           <template v-slot:prepend>
             <q-icon name="phone" color="green" />
           </template>

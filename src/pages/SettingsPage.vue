@@ -28,7 +28,7 @@
           })
         "
       >
-        <q-item-section>{{ $t("paymentMethod", 2) }}</q-item-section>
+        <q-item-section>{{ $t("changePassword", 2) }}</q-item-section>
         <q-item-section avatar>
           <q-btn icon="key" />
         </q-item-section>
