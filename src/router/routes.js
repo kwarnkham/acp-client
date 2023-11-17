@@ -18,6 +18,7 @@ const routes = [
       { path: '/payments', component: () => import('pages/PaymentsPage.vue'), name: 'payments', meta: { requiresAuth: true } },
       { path: '/payment/create', component: () => import('pages/CreatePaymentPage.vue'), name: 'create-payment', meta: { requiresAuth: true } },
       { path: '/payemnt/:id/edit', component: () => import('pages/EditPaymentPage.vue'), name: 'edit-payment', meta: { requiresAuth: true } },
+      { path: '/change-password', component: () => import('pages/ChangePasswordPage.vue'), name: 'change-password', meta: { requiresAuth: true } },
 
     ]
   },

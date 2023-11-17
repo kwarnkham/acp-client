@@ -1,6 +1,9 @@
 <template>
   <q-page>
-    <q-list bordered>
+    <div class="text-center q-my-sm text-subtitle1">
+      {{ appStore.getUser.name }}
+    </div>
+    <q-list bordered separator padding>
       <q-item
         v-if="appStore.getUser?.is_admin"
         clickable
@@ -14,6 +17,20 @@
         <q-item-section>{{ $t("paymentMethod", 2) }}</q-item-section>
         <q-item-section avatar>
           <q-btn icon="credit_card" />
+        </q-item-section>
+      </q-item>
+      <q-item
+        clickable
+        v-ripple
+        @click.stop="
+          $router.push({
+            name: 'change-password',
+          })
+        "
+      >
+        <q-item-section>{{ $t("paymentMethod", 2) }}</q-item-section>
+        <q-item-section avatar>
+          <q-btn icon="key" />
         </q-item-section>
       </q-item>
       <q-item clickable v-ripple @click.stop="logout">

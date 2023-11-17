@@ -53,5 +53,10 @@ export default {
   paymentMethod: 'Payment method|Payment methods',
   number: 'Number',
   accountName: 'Account name',
-  copied: "Copied"
+  copied: "Copied",
+  changePassword: "Change password",
+  newPassword: "New password",
+  newPasswordAgain: "New password again",
+  newPasswordsMustBeTheSame: "New passwords must be the same",
+  success: "Success"
 }
