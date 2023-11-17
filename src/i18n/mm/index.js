@@ -48,5 +48,6 @@ export default {
   setting: "Setting|Settings",
   theRoundIsFinished: "The round is finished",
   ok: "Ok",
-  cancel: 'Cancel'
+  cancel: 'Cancel',
+  areYouSure: 'Are you sure?'
 }

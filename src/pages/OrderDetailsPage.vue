@@ -68,13 +68,25 @@
     <div v-if="order.screenshot" class="q-mt-xs">
       <q-img :src="order.screenshot" v-if="order.screenshot" />
     </div>
-    <div class="q-mt-md" v-if="[1, 2].includes(order.status)">
+    <div
+      class="q-mt-md row justify-evenly"
+      v-if="[1, 2].includes(order.status)"
+    >
       <q-btn
         :label="$t('cancel')"
         no-caps
-        class="full-width"
+        class="col-5"
         color="negative"
         @click="cancelOrder"
+        v-if="appStore.getUser.is_admin"
+      />
+      <q-btn
+        :label="$t('confirm')"
+        no-caps
+        class="col-5"
+        color="positive"
+        @click="confirmOrder"
+        v-if="appStore.getUser.is_admin"
       />
     </div>
   </q-page>
@@ -86,6 +98,7 @@ import { api } from "src/boot/axios";
 import FileInput from "src/components/FileInput.vue";
 import useApp from "src/composables/app";
 import useUtil from "src/composables/util";
+import { useAppStore } from "src/stores/app";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
@@ -114,10 +127,26 @@ const getTimeRemaining = () => {
 
 const picture = ref();
 const note = ref("");
+const appStore = useAppStore();
+
+const confirmOrder = () => {
+  dialog({
+    title: t("areYouSure"),
+    cancel: true,
+    noBackdropDismiss: true,
+  }).onOk(() => {
+    api({
+      method: "post",
+      url: `orders/${order.value.id}/confirm`,
+    }).then(({ data }) => {
+      order.value = data.order;
+    });
+  });
+};
 
 const cancelOrder = () => {
   dialog({
-    title: t("confirm"),
+    title: t("areYouSure"),
     cancel: true,
     noBackdropDismiss: true,
   }).onOk(() => {
@@ -147,6 +176,8 @@ const submit = () => {
     asForm: true,
   }).then(({ data }) => {
     order.value = data.order;
+    picture.value = null;
+    note.value = null;
   });
 };
 
