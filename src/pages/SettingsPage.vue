@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="text-center q-my-sm text-subtitle1">
-      {{ appStore.getUser.name }}
+      {{ appStore.getUser?.name }}
     </div>
     <q-list bordered separator padding>
       <q-item

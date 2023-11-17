@@ -62,7 +62,7 @@
       <q-card-section class="row justify-evenly q-gutter-xs">
         <q-btn
           v-for="code in round.max_tickets"
-          :key="code + (round.ticket?.id ?? 't')"
+          :key="round.order_details.length + code + (round.ticket?.id ?? 't')"
           @click="selectCode(code)"
           :color="getTicketColor(code)"
         >
@@ -102,9 +102,10 @@ import UserFormDialog from "src/components/UserFormDialog.vue";
 import useApp from "src/composables/app";
 import useUtil from "src/composables/util";
 import { useAppStore } from "src/stores/app";
-import { onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
+import { laravelEcho } from "src/boot/global-properties";
 
 const { vhPage } = useUtil();
 const { t } = useI18n();
@@ -250,5 +251,19 @@ onMounted(() => {
   }).then(({ data }) => {
     round.value = data.round;
   });
+
+  laravelEcho
+    .channel(`rounds.${roundId}`)
+    .listen("OrderUpdated", ({ order }) => {
+      selectedCodes.value = selectedCodes.value.filter(
+        (e) => !order.tickets.map((ticket) => ticket.pivot.code).includes(e - 1)
+      );
+
+      round.value = order.round;
+    });
+});
+
+onBeforeUnmount(() => {
+  laravelEcho.leaveChannel(`rounds.${route.params.id}`);
 });
 </script>
