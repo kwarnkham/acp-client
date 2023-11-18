@@ -15,15 +15,15 @@
       <q-card-actions align="right">
         <q-btn
           color="primary"
-          :label="$t('ok')"
-          @click="onOk"
-          :disable="name == '' || phone == ''"
+          :label="$t('cancel')"
+          @click="onDialogCancel"
           no-caps
         />
         <q-btn
           color="primary"
-          :label="$t('cancel')"
-          @click="onDialogCancel"
+          :label="$t('ok')"
+          @click="onOk"
+          :disable="name == '' || phone == ''"
           no-caps
         />
       </q-card-actions>

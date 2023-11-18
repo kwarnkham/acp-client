@@ -13,12 +13,26 @@
     <div class="full-wdith q-my-sm" v-if="appStore.getUser?.is_admin">
       <q-btn icon="check" class="full-width" color="indigo" @click="settle" />
     </div>
-    <div class="full-wdith q-my-sm">
+    <div class="full-wdith q-my-sm row justify-evenly">
       <q-btn
         icon="share"
-        class="full-width"
+        class="col-5"
         color="blue"
         @click="copyLinkToClipboard"
+      />
+      <q-btn
+        :label="$t('order')"
+        class="col-5"
+        no-caps
+        color="blue"
+        @click="
+          $router.push({
+            name: 'orders',
+            query: {
+              round_id: round.id,
+            },
+          })
+        "
       />
     </div>
 
