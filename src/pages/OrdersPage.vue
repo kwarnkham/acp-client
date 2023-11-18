@@ -16,7 +16,44 @@
         <q-icon name="phone" />
       </template>
     </q-input>
-    <q-list padding dense bordered separator class="col">
+    <div class="row justify-evenly q-my-xs">
+      <q-btn
+        :label="$t(orderStatusToText(1))"
+        no-caps
+        @click="filterStatus(1)"
+        :color="filteredStatuses.includes(1) ? 'primary' : 'grey'"
+        dense
+      />
+      <q-btn
+        :label="$t(orderStatusToText(2))"
+        no-caps
+        @click="filterStatus(2)"
+        :color="filteredStatuses.includes(2) ? 'primary' : 'grey'"
+        dense
+      />
+      <q-btn
+        :label="$t(orderStatusToText(3))"
+        no-caps
+        @click="filterStatus(3)"
+        :color="filteredStatuses.includes(3) ? 'primary' : 'grey'"
+        dense
+      />
+      <q-btn
+        :label="$t(orderStatusToText(4))"
+        no-caps
+        @click="filterStatus(4)"
+        :color="filteredStatuses.includes(4) ? 'primary' : 'grey'"
+        dense
+      />
+      <q-btn
+        :label="$t(orderStatusToText(5))"
+        no-caps
+        @click="filterStatus(5)"
+        :color="filteredStatuses.includes(5) ? 'primary' : 'grey'"
+        dense
+      />
+    </div>
+    <q-list padding dense bordered separator class="col overflow-auto">
       <q-item
         v-for="order in pagination.data"
         :key="order.id"
@@ -81,11 +118,26 @@ const { orderStatusToText } = useApp();
 const route = useRoute();
 const roundId = ref(route.query.round_id ?? "");
 const phone = ref(route.query.phone ?? "");
+const filteredStatuses = ref(
+  route.query.status.split(",").map((e) => Number(e))
+);
+const filterStatus = (status) => {
+  const index = filteredStatuses.value.findIndex((e) => e == status);
+  if (index != -1) filteredStatuses.value.splice(index, 1);
+  else filteredStatuses.value.push(status);
+};
 
 watch(
-  [roundId, phone],
+  [roundId, phone, filteredStatuses],
   debounce(() => {
-    updateQueryAndFetch({ round_id: roundId.value, phone: phone.value });
-  }, 500)
+    updateQueryAndFetch({
+      round_id: roundId.value,
+      phone: phone.value,
+      status: filteredStatuses.value.join(","),
+    });
+  }, 500),
+  {
+    deep: true,
+  }
 );
 </script>

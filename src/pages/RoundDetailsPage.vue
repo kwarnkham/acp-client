@@ -9,6 +9,25 @@
       <span>{{ round.item.name }}</span>
       <q-btn icon="info" flat round color="info" @click="showRoundInfo" />
     </div>
+    <div
+      class="full-wdith q-my-sm q-gutter-x-md"
+      v-if="round.status == 2 && appStore.getUser?.is_admin"
+    >
+      <q-btn :label="round.code" color="purple" />
+      <q-btn
+        icon="star"
+        color="purple"
+        v-if="round.ticket?.order_id"
+        @click="
+          $router.push({
+            name: 'order-details',
+            params: {
+              id: round.ticket.order_id,
+            },
+          })
+        "
+      />
+    </div>
 
     <div class="full-wdith q-my-sm" v-if="appStore.getUser?.is_admin">
       <q-btn icon="check" class="full-width" color="indigo" @click="settle" />
@@ -146,6 +165,7 @@ const copyLinkToClipboard = () => {
 };
 
 const selectCode = (code) => {
+  if (round.value.status == 2) return;
   const index = round.value.order_details.findIndex(
     (e) => e.pivot.code == code - 1 && ![4, 5].includes(e.status)
   );
