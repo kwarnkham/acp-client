@@ -21,6 +21,7 @@ export default function useUtil () {
   }
 
   const toDigits = (code, digits) => {
+    if (digits < 2) digits = 2
     return code.toString().padStart(digits, "0")
   }
 

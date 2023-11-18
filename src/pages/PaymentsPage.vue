@@ -8,6 +8,9 @@
         :key="paymentMethod.id"
         :class="{ 'text-red': paymentMethod.status == 2 }"
       >
+        <q-item-section avatar>
+          <q-img :src="paymentMethod.picture" />
+        </q-item-section>
         <q-item-section>
           <q-item-label>{{ paymentMethod.name }}</q-item-label>
           <q-item-label>{{ paymentMethod.number }}</q-item-label>

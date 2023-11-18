@@ -68,28 +68,24 @@
     <div v-if="order.screenshot" class="q-mt-xs">
       <q-img :src="order.screenshot" v-if="order.screenshot" />
     </div>
-    <div class="q-pa-sm">
+    <q-list class="q-pa-sm" separator>
       <div class="text-center">Payments Methods</div>
-      <div
+
+      <q-item
         v-for="paymentMethod in paymentMethods"
         :key="paymentMethod.id"
         class="q-mb-sm"
       >
-        <div>{{ paymentMethod.name }}</div>
-        <div class="row items-center text-info">
-          <div>{{ paymentMethod.number }}</div>
-          <q-btn
-            icon="content_copy"
-            no-caps
-            flat
-            round
-            @click="copyNumber(paymentMethod.number)"
-          />
-        </div>
-        <div><q-icon name="person" />{{ paymentMethod.account_name }}</div>
-        <q-separator />
-      </div>
-    </div>
+        <q-item-section avatar>
+          <q-img :src="paymentMethod.picture" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>{{ paymentMethod.name }}</q-item-label>
+          <q-item-label>{{ paymentMethod.number }}</q-item-label>
+          <q-item-label overline>{{ paymentMethod.account_name }}</q-item-label>
+        </q-item-section>
+      </q-item>
+    </q-list>
     <div
       class="q-mt-md row justify-evenly"
       v-if="[1, 2].includes(order.status)"

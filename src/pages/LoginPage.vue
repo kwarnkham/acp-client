@@ -5,12 +5,20 @@
       <q-input
         v-model="name"
         required
-        :label="$t('phoneNumber')"
+        :label="$t(usernameLogin ? 'name' : 'phoneNumber')"
         autofocus
         outlined
         autocomplete="username"
-        type="tel"
-      />
+        :type="usernameLogin ? 'text' : 'tel'"
+      >
+        <template v-slot:append>
+          <q-btn
+            :icon="usernameLogin ? 'phone' : 'person'"
+            @click="usernameLogin = !usernameLogin"
+            class="text-green"
+          />
+        </template>
+      </q-input>
       <q-input
         v-model="password"
         required
@@ -47,6 +55,7 @@ const password = ref("");
 const showPasword = ref(false);
 const router = useRouter();
 const { preserveUser } = useApp();
+const usernameLogin = ref(false);
 
 const submit = () => {
   api({
