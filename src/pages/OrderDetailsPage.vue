@@ -1,5 +1,10 @@
 <template>
-  <q-page padding v-if="order">
+  <q-page
+    padding
+    v-if="order"
+    class="relative-position"
+    :class="{ 'bg-grey-3': order.status == 3 }"
+  >
     <div class="text-center text-h6 row no-wrap">
       <div class="text-right col-6 q-mr-sm">#{{ order.id }}</div>
       <div
@@ -65,7 +70,7 @@
         />
       </div>
     </q-form>
-    <div v-if="order.screenshot" class="q-mt-xs">
+    <div v-if="order.screenshot && order.status != 3" class="q-mt-xs">
       <q-img :src="order.screenshot" v-if="order.screenshot" />
     </div>
     <q-list class="q-pa-sm" separator>
@@ -83,6 +88,13 @@
           <q-item-label>{{ paymentMethod.name }}</q-item-label>
           <q-item-label>{{ paymentMethod.number }}</q-item-label>
           <q-item-label overline>{{ paymentMethod.account_name }}</q-item-label>
+        </q-item-section>
+        <q-item-section avatar>
+          <q-btn
+            icon="content_copy"
+            @click="copyNumber(paymentMethod.number)"
+            class="text-primary"
+          />
         </q-item-section>
       </q-item>
     </q-list>
@@ -107,10 +119,16 @@
         v-if="appStore.getUser?.is_admin"
       />
     </div>
+    <OrderReceipt
+      :order="order"
+      v-if="order.status == 3"
+      class="absolute-center"
+    />
   </q-page>
 </template>
 
 <script setup>
+import OrderReceipt from "src/components/OrderReceipt.vue";
 import { copyToClipboard, date, useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import FileInput from "src/components/FileInput.vue";

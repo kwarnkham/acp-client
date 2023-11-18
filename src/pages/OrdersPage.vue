@@ -119,7 +119,7 @@ const route = useRoute();
 const roundId = ref(route.query.round_id ?? "");
 const phone = ref(route.query.phone ?? "");
 const filteredStatuses = ref(
-  route.query.status.split(",").map((e) => Number(e))
+  route.query.status?.split(",").map((e) => Number(e)) ?? []
 );
 const filterStatus = (status) => {
   const index = filteredStatuses.value.findIndex((e) => e == status);
