@@ -37,7 +37,7 @@
     <q-page-sticky
       position="bottom-right"
       :offset="[18, 18]"
-      v-if="appStore.getUser.is_admin"
+      v-if="appStore.getUser?.is_admin"
     >
       <q-btn
         fab

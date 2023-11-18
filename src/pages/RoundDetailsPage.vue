@@ -10,7 +10,7 @@
       <q-btn icon="info" flat round color="info" @click="showRoundInfo" />
     </div>
 
-    <div class="full-wdith q-my-sm" v-if="appStore.getUser.is_admin">
+    <div class="full-wdith q-my-sm" v-if="appStore.getUser?.is_admin">
       <q-btn icon="check" class="full-width" color="indigo" @click="settle" />
     </div>
     <div class="full-wdith q-my-sm">
@@ -198,7 +198,7 @@ const book = () => {
         });
     });
   };
-  if (!appStore.getUser || appStore.getUser.is_admin)
+  if (!appStore.getUser || appStore.getUser?.is_admin)
     dialog({
       component: UserFormDialog,
     }).onOk(({ phone, name }) => {

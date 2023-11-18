@@ -1,5 +1,5 @@
 <template>
-  <q-page padding v-if="appStore.getUser.is_admin">
+  <q-page padding v-if="appStore.getUser?.is_admin">
     <q-list bordered>
       <q-item
         clickable

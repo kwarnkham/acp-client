@@ -29,7 +29,7 @@
           color="negative"
           icon="delete_forever"
           @click="deletePicture(modelValue)"
-          v-if="appStore.getUser.is_admin"
+          v-if="appStore.getUser?.is_admin"
         />
         <q-btn
           push

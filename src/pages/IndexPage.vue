@@ -6,7 +6,7 @@
           name: 'items',
         })
       "
-      v-if="appStore.getUser.is_admin"
+      v-if="appStore.getUser?.is_admin"
     >
       <q-card-section>
         {{ $t("item", 2) }}
@@ -34,7 +34,7 @@
         {{ $t("order", 2) }}
       </q-card-section>
     </q-card>
-    <q-card v-if="appStore.getUser.is_admin">
+    <q-card v-if="appStore.getUser?.is_admin">
       <q-card-section>
         {{ $t("user", 2) }}
       </q-card-section>

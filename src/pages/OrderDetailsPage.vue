@@ -100,7 +100,7 @@
         class="col-5"
         color="negative"
         @click="cancelOrder"
-        v-if="appStore.getUser.is_admin"
+        v-if="appStore.getUser?.is_admin"
       />
       <q-btn
         :label="$t('confirm')"
@@ -108,7 +108,7 @@
         class="col-5"
         color="positive"
         @click="confirmOrder"
-        v-if="appStore.getUser.is_admin"
+        v-if="appStore.getUser?.is_admin"
       />
     </div>
   </q-page>
