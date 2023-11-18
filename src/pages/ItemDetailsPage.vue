@@ -8,7 +8,7 @@
             <q-btn
               icon="edit"
               rounded
-              v-if="user?.is_admin"
+              v-if="appStore.getUser?.is_admin"
               @click="
                 $router.push({
                   name: 'edit-item',
@@ -43,18 +43,18 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import ItemPictureCarousel from "src/components/ItemPictureCarousel.vue";
 import useUtil from "src/composables/util";
 import { onMounted, ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import RoundForm from "src/components/RoundForm.vue";
+import { useAppStore } from "src/stores/app";
 
 const route = useRoute();
 const item = ref(null);
 const slide = ref(1);
+const appStore = useAppStore();
 
 const { vhPage } = useUtil();
 

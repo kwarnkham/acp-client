@@ -5,10 +5,11 @@
       <q-input
         v-model="name"
         required
-        :label="$t('name')"
+        :label="$t('phoneNumber')"
         autofocus
         outlined
         autocomplete="username"
+        type="tel"
       />
       <q-input
         v-model="password"

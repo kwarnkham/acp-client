@@ -5,47 +5,11 @@
     :style-fn="vhPage"
     class="column no-wrap relative-position"
   >
-    <div class="row q-gutter-y-xs">
-      <div
-        class="col-12 text-h6 text-center"
-        :class="{ 'bg-positive': round.status == 2 }"
-      >
-        {{ round.item.name }} : {{ $t("round") }} - {{ round.id }}
-      </div>
-      <div class="col-12" v-if="round.item?.description">
-        {{ round.item.description }}
-      </div>
-      <div class="col-12">
-        {{ $t("totalNumberOfTickets") }} :
-        {{ round.max_tickets }}
-      </div>
-      <div class="col-12">
-        {{ $t("pricePerTicket") }} :
-        {{ round.price_per_ticket }}
-      </div>
-      <div class="col-12" v-if="appStore.getUser?.is_admin">
-        {{ $t("itemPrice") }} : {{ round.price }}
-      </div>
-      <div class="col-12" v-if="round.note">
-        {{ $t("note") }} : {{ round.note }}
-      </div>
-      <div class="col-12">
-        {{ $t("bookingExpiresIn") }} :
-        {{ round.expires_in }}
-        {{ $t("minute", 2) }}
-      </div>
+    <div class="text-subtitle1 text-center">
+      <span>{{ round.item.name }}</span>
+      <q-btn icon="info" flat round color="info" @click="showRoundInfo" />
     </div>
-    <div class="justify-between row">
-      <q-btn :label="$t('available')" no-caps />
-      <q-btn
-        :label="$t('selected')"
-        no-caps
-        color="green"
-        v-if="appStore.getUser"
-      />
-      <q-btn :label="$t('booked')" no-caps color="orange" />
-      <q-btn :label="$t('soldOut')" no-caps color="red" />
-    </div>
+
     <div class="full-wdith q-my-sm" v-if="appStore.getUser.is_admin">
       <q-btn icon="check" class="full-width" color="indigo" @click="settle" />
     </div>
@@ -106,6 +70,7 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 import { laravelEcho } from "src/boot/global-properties";
+import RoundInfoDialog from "src/components/RoundInfoDialog.vue";
 
 const { vhPage } = useUtil();
 const { t } = useI18n();
@@ -139,6 +104,15 @@ const settle = () => {
     }).then(({ data }) => {
       round.value = data.round;
     });
+  });
+};
+
+const showRoundInfo = () => {
+  dialog({
+    component: RoundInfoDialog,
+    componentProps: {
+      round: round.value,
+    },
   });
 };
 

@@ -14,6 +14,7 @@
               name: 'index',
             })
           "
+          class="font-great-vibes"
         >
           Lucky Mee Mee
         </q-toolbar-title>

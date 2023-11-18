@@ -1,1 +1,1 @@
-if fb use fb logout
+settle ui
