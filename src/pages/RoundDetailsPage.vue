@@ -68,6 +68,7 @@
             color="positive"
             floating
             v-if="
+              appStore.getUser &&
               round.order_details.find(
                 (e) => e.pivot.code == code - 1 && e.status == 3
               )?.user_id == appStore.getUser.id
@@ -188,7 +189,7 @@ const selectCode = (code) => {
         1
       );
   } else {
-    if (appStore.getUser.is_admin)
+    if (appStore.getUser?.is_admin)
       dialog({
         title: "Check order details?",
         noBackdropDismiss: true,
@@ -213,7 +214,7 @@ const getTicketColor = (code) => {
 
   if (found != null) {
     if (found.status == 3) return "red";
-    else if (found.status == 2 && appStore.getUser.is_admin) return "black";
+    else if (found.status == 2 && appStore.getUser?.is_admin) return "black";
     else return "orange";
   }
 };
@@ -271,8 +272,8 @@ const book = () => {
       cancel: true,
     }).onOk(() => {
       sendBookRequest({
-        phone: appStore.getUser.phone,
-        name: appStore.getUser.name,
+        phone: appStore.getUser?.phone,
+        name: appStore.getUser?.name,
       });
     });
 };
