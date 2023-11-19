@@ -20,6 +20,12 @@
     </div>
     <div class="text-subtitle2">
       <q-icon color="green" name="phone" size="sm" />{{ order.user.phone }}
+      <q-btn
+        icon="file_copy"
+        @click="copyNumber(order.user.phone)"
+        flat
+        class="q-ml-sm text-primary"
+      />
     </div>
     <div class="text-subtitle2">
       <q-icon color="primary" name="person" size="sm" />{{

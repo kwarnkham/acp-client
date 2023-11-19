@@ -34,7 +34,14 @@
         {{ $t("order", 2) }}
       </q-card-section>
     </q-card>
-    <q-card v-if="appStore.getUser?.is_admin">
+    <q-card
+      v-if="appStore.getUser?.is_admin"
+      @click="
+        $router.push({
+          name: 'users',
+        })
+      "
+    >
       <q-card-section>
         {{ $t("user", 2) }}
       </q-card-section>

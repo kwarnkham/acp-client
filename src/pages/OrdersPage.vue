@@ -132,7 +132,7 @@ watch(
   debounce(() => {
     updateQueryAndFetch({
       round_id: roundId.value,
-      phone: phone.value,
+      order_phone: phone.value,
       status: filteredStatuses.value.join(","),
     });
   }, 500),

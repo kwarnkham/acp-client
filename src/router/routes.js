@@ -20,6 +20,7 @@ const routes = [
       { path: '/payemnt/:id/edit', component: () => import('pages/EditPaymentPage.vue'), name: 'edit-payment', meta: { requiresAuth: true } },
       { path: '/change-password', component: () => import('pages/ChangePasswordPage.vue'), name: 'change-password', meta: { requiresAuth: true } },
       { path: '/telegram-bot', component: () => import('pages/TelegramBotSettingPage.vue'), name: 'telegram-bot', meta: { requiresAuth: true } },
+      { path: '/users', component: () => import('pages/UsersPage.vue'), name: 'users', meta: { requiresAuth: true } },
     ]
   },
 
