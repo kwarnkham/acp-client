@@ -31,11 +31,24 @@
         <div><q-icon name="phone" size="md" color="green" /></div>
         <div>{{ order.user.phone }}</div>
       </div>
-      <q-img
-        :src="$ASSETS_URL + '/assets/paid.png'"
-        fit="contain"
-        height="100px"
-      />
+
+      <div class="text-center">
+        <q-img
+          v-if="order.round.item.pictures.length"
+          :src="order.round.item.pictures[0].name"
+          fit="contain"
+          height="120px"
+          width="120px"
+        >
+          <q-img
+            :src="$ASSETS_URL + '/assets/paid.png'"
+            fit="contain"
+            height="70px"
+            width="70px"
+            class="absolute-top-right"
+            style="background-color: transparent"
+        /></q-img>
+      </div>
     </div>
     <div
       style="height: 50px"
