@@ -58,22 +58,13 @@
     <q-card class="col overflow-auto">
       <q-card-section class="row justify-evenly q-gutter-xs">
         <q-btn
-          v-for="code in round.max_tickets"
-          :key="code + Date.now()"
-          @click="selectCode(code)"
-          :color="getTicketColor(code)"
+          v-for="ticket in tickets"
+          :key="ticket.code"
+          @click="selectCode(ticket.code)"
+          :color="ticket.color"
         >
-          {{ toDigits(code - 1, String(round.max_tickets).length - 1) }}
-          <q-badge
-            color="positive"
-            floating
-            v-if="
-              appStore.getUser &&
-              round.order_details.find(
-                (e) => e.pivot.code == code - 1 && e.status == 3
-              )?.user_id == appStore.getUser.id
-            "
-          >
+          {{ toDigits(ticket.code, String(round.max_tickets - 1).length) }}
+          <q-badge color="positive" floating v-if="ticket.ownned">
             <q-icon name="check" style="font-size: 10px" />
           </q-badge>
         </q-btn>
@@ -97,7 +88,11 @@
       <div>
         <div>{{ $t("theRoundIsFinished") }}</div>
         <div>
-          <q-btn :label="round.ticket?.code" color="purple" size="lg" />
+          <q-btn
+            :label="toDigits(round.code, String(round.max_tickets - 1).length)"
+            color="purple"
+            size="lg"
+          />
         </div>
       </div>
     </div>
@@ -111,7 +106,7 @@ import UserFormDialog from "src/components/UserFormDialog.vue";
 import useApp from "src/composables/app";
 import useUtil from "src/composables/util";
 import { useAppStore } from "src/stores/app";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 import { laravelEcho } from "src/boot/global-properties";
@@ -176,10 +171,26 @@ const copyLinkToClipboard = () => {
     });
 };
 
+const tickets = computed(() => {
+  const data = [];
+  for (let index = 0; index < round.value.max_tickets; index++) {
+    data.push({
+      code: index,
+      color: getTicketColor(index),
+      ownned:
+        appStore.getUser != null &&
+        round.value.order_details.find(
+          (e) => e.pivot.code == index && e.status == 3
+        )?.user_id == appStore.getUser.id,
+    });
+  }
+  return data;
+});
+
 const selectCode = (code) => {
   if (round.value.status == 2) return;
   const order = round.value.order_details.find(
-    (e) => e.pivot.code == code - 1 && ![4, 5].includes(e.status)
+    (e) => e.pivot.code == code && ![4, 5].includes(e.status)
   );
   if (!order) {
     if (!selectedCodes.value.includes(code)) selectedCodes.value.push(code);
@@ -207,9 +218,9 @@ const selectCode = (code) => {
 
 const getTicketColor = (code) => {
   if (selectedCodes.value.includes(code)) return "green";
-  if (code - 1 == round.value.ticket?.code) return "purple";
+  if (code == round.value.ticket?.code) return "purple";
   const found = round.value.order_details.find(
-    (e) => e.pivot.code == code - 1 && ![4, 5].includes(e.status)
+    (e) => e.pivot.code == code && ![4, 5].includes(e.status)
   );
 
   if (found != null) {
@@ -229,7 +240,7 @@ const book = () => {
         name: name,
         phone: phone,
         round_id: round.value.id,
-        codes: selectedCodes.value.map((e) => e - 1),
+        codes: selectedCodes.value,
       },
     }).then(({ data }) => {
       const orderData = data.order;
@@ -291,10 +302,16 @@ onMounted(() => {
     .channel(`rounds.${roundId}`)
     .listen("OrderUpdated", ({ order }) => {
       selectedCodes.value = selectedCodes.value.filter(
-        (e) => !order.tickets.map((ticket) => ticket.pivot.code).includes(e - 1)
+        (e) => !order.tickets.map((ticket) => ticket.pivot.code).includes(e)
       );
 
       round.value = order.round;
+    })
+    .listen("RoundUpdated", (payload) => {
+      round.value.code = payload.round.code;
+      round.value.ticket = payload.round.ticket;
+      round.value.ticket_id = payload.round.ticket_id;
+      round.value.status = payload.round.status;
     });
 });
 

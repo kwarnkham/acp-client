@@ -143,6 +143,7 @@ import { useAppStore } from "src/stores/app";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
+import { laravelEcho } from "src/boot/global-properties";
 const { getDateDiff } = date;
 
 const { notify, dialog } = useQuasar();
@@ -247,6 +248,12 @@ onMounted(() => {
       intervalId = setInterval(() => {
         timeRemaining.value = getTimeRemaining();
       }, 1000);
+
+    laravelEcho
+      .channel(`rounds.${order.value.round_id}`)
+      .listen("OrderUpdated", (payload) => {
+        order.value.status = payload.order.status;
+      });
   });
 
   api({
@@ -259,5 +266,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (intervalId) clearInterval(intervalId);
+  laravelEcho.leaveChannel(`rounds.${order.value.round_id}`);
 });
 </script>

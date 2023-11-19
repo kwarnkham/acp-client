@@ -1,6 +1,7 @@
 import { boot } from 'quasar/wrappers'
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import { api } from './axios';
 
 const laravelEcho = new Echo({
   broadcaster: "pusher",
@@ -13,8 +14,26 @@ const laravelEcho = new Echo({
   disableStats: true,
   enabledTransports: ["ws", "wss"],
   cluster: "mt1",
+  authorizer: (channel, options) => {
+    return {
+      authorize: (socketId, callback) => {
+        api({
+          method: "POST",
+          url: "/broadcasting/auth",
+          data: {
+            socket_id: socketId,
+            channel_name: channel.name
+          }
+        }).then(response => {
+          callback(null, response.data);
+        })
+          .catch(error => {
+            callback(error);
+          });
+      }
+    };
+  },
 });
-console.log(process.env.PROD)
 
 export default boot(async ({ app }) => {
   window.Pusher = Pusher;
