@@ -42,6 +42,7 @@
           dense
         />
         <q-btn :label="$t('booked')" no-caps color="orange" dense />
+        <q-btn :label="$t('paid')" no-caps color="black" dense />
         <q-btn :label="$t('soldOut')" no-caps color="red" dense />
       </div>
     </q-card>

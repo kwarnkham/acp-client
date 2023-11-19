@@ -59,11 +59,22 @@
       <q-card-section class="row justify-evenly q-gutter-xs">
         <q-btn
           v-for="code in round.max_tickets"
-          :key="round.order_details.length + code + (round.ticket?.id ?? 't')"
+          :key="code + Date.now()"
           @click="selectCode(code)"
           :color="getTicketColor(code)"
         >
           {{ toDigits(code - 1, String(round.max_tickets).length - 1) }}
+          <q-badge
+            color="positive"
+            floating
+            v-if="
+              round.order_details.find(
+                (e) => e.pivot.code == code - 1 && e.status == 3
+              )?.user_id == appStore.getUser.id
+            "
+          >
+            <q-icon name="check" style="font-size: 10px" />
+          </q-badge>
         </q-btn>
       </q-card-section>
     </q-card>
@@ -166,16 +177,30 @@ const copyLinkToClipboard = () => {
 
 const selectCode = (code) => {
   if (round.value.status == 2) return;
-  const index = round.value.order_details.findIndex(
+  const order = round.value.order_details.find(
     (e) => e.pivot.code == code - 1 && ![4, 5].includes(e.status)
   );
-  if (index == -1) {
+  if (!order) {
     if (!selectedCodes.value.includes(code)) selectedCodes.value.push(code);
     else
       selectedCodes.value.splice(
         selectedCodes.value.findIndex((e) => e == code),
         1
       );
+  } else {
+    if (appStore.getUser.is_admin)
+      dialog({
+        title: "Check order details?",
+        noBackdropDismiss: true,
+        cancel: true,
+      }).onOk(() => {
+        router.push({
+          name: "order-details",
+          params: {
+            id: order.id,
+          },
+        });
+      });
   }
 };
 
@@ -188,6 +213,7 @@ const getTicketColor = (code) => {
 
   if (found != null) {
     if (found.status == 3) return "red";
+    else if (found.status == 2 && appStore.getUser.is_admin) return "black";
     else return "orange";
   }
 };
