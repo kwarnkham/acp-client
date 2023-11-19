@@ -33,6 +33,26 @@
           <q-btn icon="key" />
         </q-item-section>
       </q-item>
+      <q-item
+        clickable
+        v-ripple
+        @click.stop="
+          $router.push({
+            name: 'telegram-bot',
+          })
+        "
+      >
+        <q-item-section>Telegram Bot Setting</q-item-section>
+        <q-item-section avatar>
+          <q-btn
+            icon="send"
+            class="rotate-315 text-white"
+            round
+            style="background-color: #30a4da"
+          />
+        </q-item-section>
+      </q-item>
+
       <q-item clickable v-ripple @click.stop="logout">
         <q-item-section>{{ $t("logout") }}</q-item-section>
         <q-item-section avatar>

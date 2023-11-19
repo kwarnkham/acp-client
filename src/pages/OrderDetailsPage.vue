@@ -21,6 +21,11 @@
     <div class="text-subtitle2">
       <q-icon color="green" name="phone" size="sm" />{{ order.user.phone }}
     </div>
+    <div class="text-subtitle2">
+      <q-icon color="primary" name="person" size="sm" />{{
+        order.user.display_name
+      }}
+    </div>
     <div>{{ $t("name") }}: {{ order.round.item.name }}</div>
     <div>{{ $t("description") }}: {{ order.round.item.description }}</div>
     <div class="row q-gutter-sm">
