@@ -258,7 +258,8 @@ onMounted(() => {
     laravelEcho
       .channel(`rounds.${order.value.round_id}`)
       .listen("OrderUpdated", (payload) => {
-        order.value.status = payload.order.status;
+        if (order.value.id == payload.order.id)
+          order.value.status = payload.order.status;
       });
   });
 
