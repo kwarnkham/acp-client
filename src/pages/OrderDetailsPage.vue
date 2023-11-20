@@ -145,6 +145,7 @@
     <div
       class="fit absolute-center"
       style="background-color: rgba(0, 0, 0, 0.5)"
+      v-if="order.status == 3"
     ></div>
     <OrderReceipt
       :order="order"
