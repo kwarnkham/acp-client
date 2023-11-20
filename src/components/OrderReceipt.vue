@@ -1,12 +1,12 @@
 <template>
-  <div class="receipt rounded-borders column">
+  <div class="receipt rounded-borders column bg-yellow-1">
     <div class="col q-pa-sm">
       <div class="text-center text-subtitle1">
         {{ order.amount.toLocaleString() }} (Ks)
       </div>
       <q-separator spaced />
 
-      <div class="q-gutter-x-xs row">
+      <div class="q-gutter-xs row">
         <q-btn v-for="details in order.tickets" :key="details.id" color="green">
           {{
             toDigits(
@@ -19,20 +19,23 @@
       <div class="text-center text-weight-bold q-my-md">
         {{ order.round.item.name }}
       </div>
+      <q-separator />
       <div class="q-mt-sm row justify-between">
-        <div>{{ $t("pricePerTicket") }}</div>
+        <div><q-icon name="sell" size="md" color="info" /></div>
         <div>{{ order.round.price_per_ticket.toLocaleString() }} (Ks)</div>
       </div>
+      <q-separator />
       <div class="q-mt-sm row justify-between">
         <div><q-icon name="person" size="md" color="primary" /></div>
         <div>{{ order.user.display_name }}</div>
       </div>
+      <q-separator />
       <div class="q-mt-sm row justify-between">
         <div><q-icon name="phone" size="md" color="green" /></div>
         <div>{{ order.user.phone }}</div>
       </div>
-
-      <div class="text-center">
+      <q-separator />
+      <div class="text-center q-mt-sm">
         <q-img
           v-if="order.round.item.pictures.length"
           :src="order.round.item.pictures[0].name"
@@ -54,8 +57,14 @@
       style="height: 50px"
       class="relative-position footer row items-center q-px-md justify-between"
     >
-      <div class="top-left-clipped clipped"></div>
-      <div class="top-right-clipped clipped"></div>
+      <div
+        class="top-left-clipped clipped"
+        :style="{ 'background-color': receiptBackground }"
+      ></div>
+      <div
+        class="top-right-clipped clipped"
+        :style="{ 'background-color': receiptBackground }"
+      ></div>
       <div class="font-great-vibes text-weight-bold">Lucky Mee Mee</div>
       <div class="font-great-vibes text-weight-bold">Thanks you</div>
     </div>
@@ -71,6 +80,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  receiptBackground: {
+    type: String,
+    default: "white",
+  },
 });
 </script>
 
@@ -78,7 +91,7 @@ const props = defineProps({
 .receipt {
   min-height: 400px;
   width: 80vw;
-  background-color: white;
+  max-width: 300px;
   border: 1px solid black;
 }
 
@@ -93,7 +106,7 @@ const props = defineProps({
   height: 20px;
   border-radius: 100%;
   position: absolute;
-  background-color: $grey-3;
+  // background-color: $grey-3;
 }
 
 .top-right-clipped {
@@ -103,7 +116,7 @@ const props = defineProps({
 }
 
 .footer {
-  border-top: 2px dashed $grey-3;
+  border-top: 3px dashed #777777;
   font-size: 15px;
 }
 </style>

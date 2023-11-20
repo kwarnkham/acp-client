@@ -23,7 +23,7 @@
         "
       >
         <q-item-section>
-          <q-item-label :class="{ 'text-positive': round.ticket != null }"
+          <q-item-label :class="{ 'text-positive': round.status == 2 }"
             >#{{ round.id }}</q-item-label
           >
           <q-item-label caption>{{ round.item.name }}</q-item-label>

@@ -68,9 +68,17 @@
       </template>
       {{ $t("expiresIn") }} : {{ timeRemaining }}
     </q-banner>
-    <q-form @submit.prevent="submit" v-if="[1, 2].includes(order.status)">
-      <FileInput :multiple="false" v-model="picture" />
-      <q-input :label="$t('note')" v-model="note" />
+    <q-form @submit.prevent="submit" v-if="[1].includes(order.status)">
+      <FileInput
+        :multiple="false"
+        v-model="picture"
+        label="ငွေလွဲ စခရင်ရှော့ကို ဒီမှာထည့်ပေးပါနော်"
+      />
+      <q-input
+        :label="$t('note')"
+        v-model="note"
+        hint="Note မထည့်လဲရပါတယ်နော်"
+      />
       <div class="q-mt-md">
         <q-btn
           :label="$t('pay')"
@@ -81,6 +89,10 @@
         />
       </div>
     </q-form>
+    <div v-else-if="order.status == 2" class="text-left">
+      ဒီအဆင့်ထိရောက်ပြီဆိုရင် ငွေလွဲရောက်တာကို စစ်ပြီး အက်ဒမင်ဖက်က အတည်ပြု
+      တာကိုစောင့်ပေးပါနော်
+    </div>
     <div v-if="order.screenshot && order.status != 3" class="q-mt-xs">
       <q-img :src="order.screenshot" v-if="order.screenshot" />
     </div>
@@ -130,10 +142,15 @@
         v-if="appStore.getUser?.is_admin"
       />
     </div>
+    <div
+      class="fit absolute-center"
+      style="background-color: rgba(0, 0, 0, 0.5)"
+    ></div>
     <OrderReceipt
       :order="order"
       v-if="order.status == 3"
       class="absolute-center"
+      receipt-background="#777777"
     />
   </q-page>
 </template>

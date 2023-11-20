@@ -22,8 +22,12 @@
       </q-toolbar>
     </q-header>
 
-    <q-page-container>
-      <router-view :class="{ 'bg-indigo-2': appStore.getUser?.is_admin }" />
+    <q-page-container class="row justify-center bg-yellow-2">
+      <router-view
+        :class="[appStore.getUser?.is_admin ? 'bg-indigo-2' : 'bg-white']"
+        class="col"
+        style="max-width: 400px"
+      />
     </q-page-container>
 
     <q-footer elevated v-if="appStore.getUser">
