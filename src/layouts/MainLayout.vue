@@ -23,7 +23,7 @@
     </q-header>
 
     <q-page-container>
-      <router-view />
+      <router-view :class="{ 'bg-indigo-2': appStore.getUser?.is_admin }" />
     </q-page-container>
 
     <q-footer elevated v-if="appStore.getUser">
