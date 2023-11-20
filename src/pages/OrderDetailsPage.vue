@@ -256,7 +256,7 @@ onMounted(() => {
       }, 1000);
 
     laravelEcho
-      .channel(`rounds.${order.value.round_id}`)
+      .private(`orders.${order.value.id}`)
       .listen("OrderUpdated", (payload) => {
         if (order.value.id == payload.order.id)
           order.value.status = payload.order.status;
