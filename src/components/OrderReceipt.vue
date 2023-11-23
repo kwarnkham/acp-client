@@ -7,7 +7,11 @@
       <q-separator spaced />
 
       <div class="q-gutter-xs row">
-        <q-btn v-for="details in order.tickets" :key="details.id" color="green">
+        <q-btn
+          v-for="details in order.tickets"
+          :key="details.id"
+          :color="details.pivot.code == code ? 'purple' : 'green'"
+        >
           {{
             toDigits(
               details.pivot.code,
@@ -83,6 +87,10 @@ const props = defineProps({
   receiptBackground: {
     type: String,
     default: "white",
+  },
+  code: {
+    type: Number,
+    default: null,
   },
 });
 </script>

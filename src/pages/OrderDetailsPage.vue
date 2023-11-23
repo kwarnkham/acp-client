@@ -90,8 +90,8 @@
       </div>
     </q-form>
     <div v-else-if="order.status == 2" class="text-left">
-      ဒီအဆင့်ထိရောက်ပြီဆိုရင် ငွေလွဲရောက်တာကို စစ်ပြီး အက်ဒမင်ဖက်က အတည်ပြု
-      တာကိုစောင့်ပေးပါနော်
+      ဒီအဆင့်ထိရောက်ပြီဆိုရင် ရပါပြီ။ ငွေလွဲရောက်တာကို စစ်ပြီး အက်ဒမင်ဖက်က
+      အတည်ပြုပေးပါမည်။
     </div>
     <div v-if="order.screenshot && order.status != 3" class="q-mt-xs">
       <q-img :src="order.screenshot" v-if="order.screenshot" />

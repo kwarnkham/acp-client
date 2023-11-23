@@ -11,9 +11,15 @@
     </div>
     <div
       class="full-wdith q-my-sm q-gutter-x-md"
-      v-if="round.status == 2 && appStore.getUser?.is_admin"
+      v-if="
+        round.status == 2 && appStore.getUser?.is_admin && round.code != null
+      "
     >
-      <q-btn :label="round.code" color="purple" />
+      <q-btn
+        :label="toDigits(round.code, String(round.max_tickets - 1).length)"
+        color="purple"
+      />
+
       <q-btn
         icon="star"
         color="purple"
@@ -26,6 +32,13 @@
             },
           })
         "
+      />
+
+      <q-btn
+        icon="receipt"
+        color="purple"
+        @click="showReceipt = true"
+        v-if="order"
       />
     </div>
 
@@ -81,20 +94,30 @@
       />
     </div>
     <div
-      class="col-12 absolute-center full-width row flex-center text-center text-h4 text-white"
+      class="col-12 absolute-center full-width row flex-center text-center"
       style="background-color: rgba(0, 0, 0, 0.5)"
-      v-if="!appStore.getUser?.is_admin && round.status == 2"
+      v-if="round.status == 2 && order && showReceipt"
     >
-      <div>
-        <div>{{ $t("theRoundIsFinished") }}</div>
-        <div>
-          <q-btn
-            :label="toDigits(round.code, String(round.max_tickets - 1).length)"
-            color="purple"
-            size="lg"
-          />
-        </div>
-      </div>
+      <q-btn
+        icon="close"
+        class="absolute-top-right"
+        color="info"
+        @click="hideReceipt"
+      />
+      <transition
+        appear
+        enter-active-class="animated tada"
+        leave-active-class="animated bounceOut"
+        @after-leave="showReceipt = false"
+      >
+        <OrderReceipt
+          :order="order"
+          v-if="order.status == 3 && showReceiptDialog"
+          receipt-background="#8A8A8A"
+          :code="Number(round.code)"
+          id="order-receipt"
+        />
+      </transition>
     </div>
   </q-page>
 </template>
@@ -106,11 +129,12 @@ import UserFormDialog from "src/components/UserFormDialog.vue";
 import useApp from "src/composables/app";
 import useUtil from "src/composables/util";
 import { useAppStore } from "src/stores/app";
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 import { laravelEcho } from "src/boot/global-properties";
 import RoundInfoDialog from "src/components/RoundInfoDialog.vue";
+import OrderReceipt from "src/components/OrderReceipt.vue";
 
 const { vhPage } = useUtil();
 const { t } = useI18n();
@@ -122,6 +146,25 @@ const selectedCodes = ref([]);
 const router = useRouter();
 const { preserveUser } = useApp();
 const appStore = useAppStore();
+const order = ref(null);
+const showReceipt = ref(true);
+const showReceiptDialog = ref(true);
+
+watch(round, () => {
+  if (round.value.ticket?.order_id)
+    api({
+      method: "GET",
+      url: `orders/${round.value.ticket?.order_id}`,
+    }).then(({ data }) => {
+      order.value = data.order;
+      showReceipt.value = true;
+    });
+  else order.value = false;
+});
+
+watch(showReceipt, () => {
+  showReceiptDialog.value = showReceipt.value;
+});
 
 const settle = () => {
   dialog({
@@ -145,6 +188,10 @@ const settle = () => {
       round.value = data.round;
     });
   });
+};
+
+const hideReceipt = () => {
+  showReceiptDialog.value = false;
 };
 
 const showRoundInfo = () => {
@@ -319,3 +366,12 @@ onBeforeUnmount(() => {
   laravelEcho.leaveChannel(`rounds.${route.params.id}`);
 });
 </script>
+
+<style scoped lang="scss">
+.animated::v-deep.tada {
+  --animate-duration: 1s;
+}
+.animated::v-deep.bounceOut {
+  --animate-duration: 0.6s;
+}
+</style>

@@ -34,6 +34,7 @@
         </q-item-section>
       </q-item>
       <q-item
+        v-if="appStore.getUser?.is_admin"
         clickable
         v-ripple
         @click.stop="
