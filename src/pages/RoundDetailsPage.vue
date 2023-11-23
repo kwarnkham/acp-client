@@ -370,10 +370,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-.animated::v-deep.tada {
+:deep(.animated.tada) {
   --animate-duration: 1s;
 }
-.animated::v-deep.bounceOut {
+:deep(.animated.bounceOut) {
   --animate-duration: 0.6s;
 }
 </style>

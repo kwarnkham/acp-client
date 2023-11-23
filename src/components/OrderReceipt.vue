@@ -61,14 +61,6 @@
       style="height: 50px"
       class="relative-position footer row items-center q-px-md justify-between"
     >
-      <div
-        class="top-left-clipped clipped"
-        :style="{ 'background-color': receiptBackground }"
-      ></div>
-      <div
-        class="top-right-clipped clipped"
-        :style="{ 'background-color': receiptBackground }"
-      ></div>
       <div class="font-great-vibes text-weight-bold">Lucky Mee Mee</div>
       <div class="font-great-vibes text-weight-bold">Thanks you</div>
     </div>
