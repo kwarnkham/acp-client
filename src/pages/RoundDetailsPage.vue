@@ -103,6 +103,7 @@
         class="absolute-top-right"
         color="info"
         @click="hideReceipt"
+        v-if="appStore.getUser?.is_admin"
       />
       <transition
         appear
@@ -110,13 +111,13 @@
         leave-active-class="animated bounceOut"
         @after-leave="showReceipt = false"
       >
-        <OrderReceipt
-          :order="order"
-          v-if="order.status == 3 && showReceiptDialog"
-          receipt-background="#8A8A8A"
-          :code="Number(round.code)"
-          id="order-receipt"
-        />
+        <ConfettiContainer v-if="order.status == 3 && showReceiptDialog">
+          <OrderReceipt
+            :order="order"
+            receipt-background="#8A8A8A"
+            :code="Number(round.code)"
+          />
+        </ConfettiContainer>
       </transition>
     </div>
   </q-page>
@@ -135,6 +136,7 @@ import { useRoute, useRouter } from "vue-router";
 import { laravelEcho } from "src/boot/global-properties";
 import RoundInfoDialog from "src/components/RoundInfoDialog.vue";
 import OrderReceipt from "src/components/OrderReceipt.vue";
+import ConfettiContainer from "src/components/ConfettiContainer.vue";
 
 const { vhPage } = useUtil();
 const { t } = useI18n();
