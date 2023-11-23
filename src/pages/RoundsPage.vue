@@ -1,5 +1,13 @@
 <template>
   <q-page padding :style-fn="vhPage" class="column no-wrap">
+    <div class="text-center q-mb-sm">
+      <q-btn
+        label="မပြိးသေးသော round များသာ"
+        @click="onlyOngoing = !onlyOngoing"
+        :color="onlyOngoing ? 'primary' : 'grey'"
+        no-caps
+      />
+    </div>
     <q-list
       padding
       dense
@@ -43,10 +51,21 @@
 </template>
 
 <script setup>
+import { debounce } from "quasar";
 import usePagination from "src/composables/pagination";
 import useUtil from "src/composables/util";
+import { ref, watch } from "vue";
 
 const { vhPage } = useUtil();
 
-const { pagination, current, lastPage } = usePagination("rounds");
+const { pagination, current, lastPage, updateQueryAndFetch } =
+  usePagination("rounds");
+const onlyOngoing = ref(false);
+
+watch(
+  onlyOngoing,
+  debounce(() => {
+    updateQueryAndFetch({ status: onlyOngoing.value ? 1 : undefined });
+  }, 500)
+);
 </script>
