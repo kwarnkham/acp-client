@@ -16,6 +16,11 @@
         <q-icon name="phone" />
       </template>
     </q-input>
+    <div class="row justify-between q-my-sm">
+      <q-input type="date" v-model="from" dense label="From" />
+      <q-input type="date" v-model="to" dense label="To" />
+      <q-btn icon="download" dense round flat @click="filterByDates" />
+    </div>
     <div class="row justify-evenly q-my-xs">
       <q-btn
         :label="$t(orderStatusToText(1))"
@@ -75,6 +80,10 @@
             <q-icon name="phone" color="green" size="sm" />
             {{ order.user.phone }}
           </q-item-label>
+          <q-item-label overline>
+            <q-icon name="calendar_month" color="green" size="sm" />
+            {{ new Date(order.updated_at).toLocaleDateString("en-GB") }}
+          </q-item-label>
         </q-item-section>
         <q-item-section side>
           <q-item-label>{{ order.amount }}</q-item-label>
@@ -113,11 +122,13 @@ import { useRoute } from "vue-router";
 
 const { pagination, updateQueryAndFetch, current, lastPage } =
   usePagination("orders");
-const { vhPage } = useUtil();
+const { vhPage, getTodayDate } = useUtil();
 const { orderStatusToText } = useApp();
 const route = useRoute();
 const roundId = ref(route.query.round_id ?? "");
 const phone = ref(route.query.phone ?? "");
+const from = ref(getTodayDate());
+const to = ref(getTodayDate());
 const filteredStatuses = ref(
   route.query.status?.split(",").map((e) => Number(e)) ?? []
 );
@@ -125,6 +136,13 @@ const filterStatus = (status) => {
   const index = filteredStatuses.value.findIndex((e) => e == status);
   if (index != -1) filteredStatuses.value.splice(index, 1);
   else filteredStatuses.value.push(status);
+};
+
+const filterByDates = () => {
+  updateQueryAndFetch({
+    from: from.value,
+    to: to.value,
+  });
 };
 
 watch(

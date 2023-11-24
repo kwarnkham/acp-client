@@ -20,12 +20,21 @@ export default function useUtil () {
     return formData;
   }
 
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so adding 1
+    const day = String(today.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+  }
+
   const toDigits = (code, digits) => {
     if (digits < 2) digits = 2
     return code.toString().padStart(digits, "0")
   }
 
   return {
-    vhPage, buildForm, toDigits
+    vhPage, buildForm, toDigits, getTodayDate
   }
 }
