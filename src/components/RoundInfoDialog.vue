@@ -31,6 +31,10 @@
           {{ round.expires_in }}
           {{ $t("minute", 2) }}
         </div>
+        <div class="col-12 text-center text-overline">
+          {{ round.order_details.filter((e) => e.status == 3).length }} /
+          {{ round.max_tickets }}
+        </div>
       </div>
       <div class="row justify-between q-mt-sm">
         <q-btn :label="$t('available')" no-caps dense />

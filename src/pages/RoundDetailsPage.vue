@@ -46,15 +46,9 @@
       <q-btn icon="check" class="full-width" color="indigo" @click="settle" />
     </div>
     <div class="full-wdith q-my-sm row justify-evenly">
-      <q-btn
-        icon="share"
-        class="col-5"
-        color="blue"
-        @click="copyLinkToClipboard"
-      />
+      <q-btn icon="share" color="blue" @click="copyLinkToClipboard" />
       <q-btn
         :label="$t('order')"
-        class="col-5"
         no-caps
         color="blue"
         @click="
@@ -67,6 +61,27 @@
         "
       />
     </div>
+    <div class="full-wdith q-my-sm row justify-evenly">
+      <q-btn
+        label="မဲအားလုံး"
+        no-caps
+        :color="ticketDisplayType == 1 ? 'info' : 'grey'"
+        @click="ticketDisplayType = 1"
+      />
+      <q-btn
+        label="ကျန်မဲများ"
+        no-caps
+        :color="ticketDisplayType == 2 ? 'info' : 'grey'"
+        @click="ticketDisplayType = 2"
+      />
+      <q-btn
+        label="ငွေလွဲမဲများ"
+        no-caps
+        :color="ticketDisplayType == 3 ? 'info' : 'grey'"
+        @click="ticketDisplayType = 3"
+        v-if="appStore.getUser?.is_admin"
+      />
+    </div>
 
     <q-card class="col overflow-auto">
       <q-card-section class="row justify-evenly q-gutter-xs">
@@ -76,7 +91,7 @@
           @click="selectCode(ticket.code)"
           :color="ticket.color"
         >
-          {{ toDigits(ticket.code, String(round.max_tickets - 1).length) }}
+          {{ ticket.code }}
           <q-badge color="positive" floating v-if="ticket.ownned">
             <q-icon name="check" style="font-size: 10px" />
           </q-badge>
@@ -151,6 +166,7 @@ const appStore = useAppStore();
 const order = ref(null);
 const showReceipt = ref(true);
 const showReceiptDialog = ref(true);
+const ticketDisplayType = ref(1);
 
 watch(round, () => {
   if (round.value.ticket?.order_id)
@@ -223,9 +239,18 @@ const copyLinkToClipboard = () => {
 const tickets = computed(() => {
   const data = [];
   for (let index = 0; index < round.value.max_tickets; index++) {
+    const color = getTicketColor(index);
+
+    if (
+      ticketDisplayType.value == 2 &&
+      ["black", "red", "purble", "orange"].includes(color)
+    )
+      continue;
+    else if (ticketDisplayType.value == 3 && color != "black") continue;
+
     data.push({
-      code: index,
-      color: getTicketColor(index),
+      code: toDigits(index, String(round.value.max_tickets - 1).length),
+      color,
       ownned:
         appStore.getUser != null &&
         round.value.order_details.find(
@@ -237,6 +262,7 @@ const tickets = computed(() => {
 });
 
 const selectCode = (code) => {
+  code = Number(code);
   if (round.value.status == 2) return;
   const order = round.value.order_details.find(
     (e) => e.pivot.code == code && ![4, 5].includes(e.status)
