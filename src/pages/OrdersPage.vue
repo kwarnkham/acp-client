@@ -21,6 +21,12 @@
       <q-input type="date" v-model="to" dense label="To" />
       <q-btn icon="download" dense round flat @click="filterByDates" />
     </div>
+    <div class="text-center">
+      <q-btn v-if="appStore.getUser?.is_admin" glossy color="yellow-9">
+        {{ totalAmount.toLocaleString() }}
+      </q-btn>
+    </div>
+
     <div class="row justify-evenly q-my-xs">
       <q-btn
         :label="$t(orderStatusToText(1))"
@@ -117,10 +123,11 @@ import { debounce } from "quasar";
 import useApp from "src/composables/app";
 import usePagination from "src/composables/pagination";
 import useUtil from "src/composables/util";
+import { useAppStore } from "src/stores/app";
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
-const { pagination, updateQueryAndFetch, current, lastPage } =
+const { pagination, updateQueryAndFetch, current, lastPage, totalAmount } =
   usePagination("orders");
 const { vhPage, getTodayDate } = useUtil();
 const { orderStatusToText } = useApp();
@@ -129,6 +136,7 @@ const roundId = ref(route.query.round_id ?? "");
 const phone = ref(route.query.phone ?? "");
 const from = ref(getTodayDate());
 const to = ref(getTodayDate());
+const appStore = useAppStore();
 const filteredStatuses = ref(
   route.query.status?.split(",").map((e) => Number(e)) ?? []
 );

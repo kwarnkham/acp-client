@@ -6,7 +6,7 @@ export default function usePagination (url, params) {
   const route = useRoute();
   const router = useRouter();
   const pagination = ref(null);
-  const total = ref(0)
+  const totalAmount = ref(0)
   const current = ref(1);
   const summery = ref(0)
   const lastPage = ref(0)
@@ -28,9 +28,9 @@ export default function usePagination (url, params) {
 
   const fetchMore = () => {
     const query = JSON.parse(JSON.stringify(route.query))
-    fetcher(query).then((response) => {
-      pagination.value = response.data.data;
-      total.value = response.data.total
+    fetcher(query).then(({ data }) => {
+      pagination.value = data.data;
+      totalAmount.value = data.total_amount;
     });
   };
 
@@ -53,7 +53,7 @@ export default function usePagination (url, params) {
     fetcher(query).then(({ data }) => {
       pagination.value = data.data;
       current.value = data.data.current_page;
-      total.value = data.data.total
+      totalAmount.value = data.total_amount
       lastPage.value = data.data.last_page
     });
   }
@@ -82,9 +82,9 @@ export default function usePagination (url, params) {
     pagination,
     lastPage,
     current,
-    total,
+    totalAmount,
     fetch,
     summery,
-    updateQueryAndFetch
+    updateQueryAndFetch,
   }
 }

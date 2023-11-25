@@ -37,21 +37,24 @@
           icon="home"
           :label="$t('home')"
           :to="{ name: 'index' }"
-          exact
+        />
+        <q-route-tab
+          name="rounds"
+          icon="storefront"
+          :label="$t('round', 2)"
+          :to="{ name: 'rounds' }"
         />
         <q-route-tab
           name="orders"
           icon="category"
           :label="$t('order', 2)"
           :to="{ name: 'orders' }"
-          exact
         />
         <q-route-tab
           name="settings"
           icon="settings"
           :label="$t('setting', 2)"
           :to="{ name: 'settings' }"
-          exact
         />
       </q-tabs>
     </q-footer>
