@@ -130,15 +130,16 @@ import { useAppStore } from "src/stores/app";
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
+const { vhPage, getFirstDayOfMonth, getLastDayOfMonth } = useUtil();
+const from = ref(getFirstDayOfMonth());
+const to = ref(getLastDayOfMonth());
 const { pagination, updateQueryAndFetch, current, lastPage, totalAmount } =
-  usePagination("orders");
-const { vhPage, getTodayDate } = useUtil();
+  usePagination("orders", { from: from.value, to: to.value });
 const { orderStatusToText } = useApp();
 const route = useRoute();
 const roundId = ref(route.query.round_id ?? "");
 const phone = ref(route.query.phone ?? "");
-const from = ref(getTodayDate());
-const to = ref(getTodayDate());
+
 const appStore = useAppStore();
 const filteredStatuses = ref(
   route.query.status?.split(",").map((e) => Number(e)) ?? []
