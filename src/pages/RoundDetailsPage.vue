@@ -48,6 +48,19 @@
     <div class="full-wdith q-my-sm row justify-evenly">
       <q-btn icon="share" color="blue" @click="copyLinkToClipboard" />
       <q-btn
+        icon="payment"
+        color="blue"
+        @click="
+          $router.push({
+            name: 'round-payments',
+            params: {
+              id: round.id,
+            },
+          })
+        "
+        v-if="appStore.getUser?.is_admin"
+      />
+      <q-btn
         :label="$t('order')"
         no-caps
         color="blue"

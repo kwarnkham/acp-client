@@ -273,19 +273,21 @@ onMounted(() => {
         timeRemaining.value = getTimeRemaining();
       }, 1000);
 
+    if (data.order.round.payment_methods.length == 0)
+      api({
+        method: "GET",
+        url: "payment-methods",
+      }).then(({ data }) => {
+        paymentMethods.value = data.payment_methods;
+      });
+    else paymentMethods.value = data.order.round.payment_methods;
+
     laravelEcho
       .private(`orders.${order.value.id}`)
       .listen("OrderUpdated", (payload) => {
         if (order.value.id == payload.order.id)
           order.value.status = payload.order.status;
       });
-  });
-
-  api({
-    method: "GET",
-    url: "payment-methods",
-  }).then(({ data }) => {
-    paymentMethods.value = data.payment_methods;
   });
 });
 
