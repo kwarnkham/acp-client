@@ -21,7 +21,10 @@
       <q-input type="date" v-model="to" dense label="To" />
       <q-btn icon="download" dense round flat @click="filterByDates" />
     </div>
-    <div class="text-center">
+    <div class="text-center q-gutter-x-sm">
+      <q-btn v-if="appStore.getUser?.is_admin" color="primary">
+        {{ pagination.total.toLocaleString() }}
+      </q-btn>
       <q-btn v-if="appStore.getUser?.is_admin" glossy color="yellow-9">
         {{ totalAmount.toLocaleString() }}
       </q-btn>
