@@ -98,17 +98,23 @@
 
     <q-card class="col overflow-auto">
       <q-card-section class="row justify-evenly q-gutter-xs">
-        <q-btn
-          v-for="ticket in tickets"
-          :key="ticket.code"
-          @click="selectCode(ticket.code)"
-          :color="ticket.color"
-        >
-          {{ ticket.code }}
-          <q-badge color="positive" floating v-if="ticket.ownned">
-            <q-icon name="check" style="font-size: 10px" />
-          </q-badge>
-        </q-btn>
+        <template v-for="ticket in allTickets" :key="ticket.code">
+          <q-btn
+            @click="selectCode(ticket.code)"
+            :color="ticket.color"
+            v-if="
+              ticketDisplayType == 1 ||
+              (ticketDisplayType == 2 &&
+                (ticket.color == undefined || ticket.color == 'green')) ||
+              (ticketDisplayType == 3 && ticket.color == 'black')
+            "
+          >
+            {{ ticket.code }}
+            <q-badge color="positive" floating v-if="ticket.ownned">
+              <q-icon name="check" style="font-size: 10px" />
+            </q-badge>
+          </q-btn>
+        </template>
       </q-card-section>
     </q-card>
 
@@ -251,29 +257,21 @@ const copyLinkToClipboard = () => {
     });
 };
 
-const tickets = ref([]);
+const allTickets = ref([]);
 
 const generateTickets = () => {
   const data = [];
   for (let index = 0; index < round.value.max_tickets; index++) {
-    // const color = getTicketColor(index);
-
-    // if (
-    //   ticketDisplayType.value == 2 &&
-    //   ["black", "red", "purble", "orange"].includes(color)
-    // )
-    //   continue;
-    // else if (ticketDisplayType.value == 3 && color != "black") continue;
-
-    data.push(createTicket(index));
+    const color = getTicketColor(index);
+    data.push(createTicket({ code: index, color }));
   }
   return data;
 };
 
-const createTicket = (code) => {
+const createTicket = ({ code, color }) => {
   return {
     code: toDigits(code, String(round.value.max_tickets - 1).length),
-    color: getTicketColor(code),
+    color,
     ownned:
       appStore.getUser != null &&
       round.value.order_details.find(
@@ -284,8 +282,8 @@ const createTicket = (code) => {
 
 const updateTicket = (code) => {
   code = Number(code);
-  const index = tickets.value.findIndex((e) => code == Number(e.code));
-  tickets.value[index] = createTicket(code);
+  const index = allTickets.value.findIndex((e) => code == Number(e.code));
+  allTickets.value[index] = createTicket({ code, color: getTicketColor(code) });
 };
 
 const selectCode = (code) => {
@@ -423,7 +421,7 @@ onMounted(() => {
     url: `rounds/${roundId}`,
   }).then(({ data }) => {
     round.value = data.round;
-    tickets.value = generateTickets();
+    allTickets.value = generateTickets();
   });
 
   laravelEcho
