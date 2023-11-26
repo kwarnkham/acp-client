@@ -8,7 +8,14 @@
     <q-expansion-item expand-separator :label="round.item.name">
       <div class="text-subtitle1 text-center">
         <q-btn icon="info" flat round color="info" @click="showRoundInfo" />
-        <q-btn icon="photo" flat round color="teal" @click="showPictures" />
+        <q-btn
+          icon="photo"
+          flat
+          round
+          color="teal"
+          @click="showPictures"
+          :disable="round.item.pictures.length == 0"
+        />
       </div>
       <div
         class="full-wdith q-my-sm q-gutter-x-md"
