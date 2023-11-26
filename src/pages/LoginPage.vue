@@ -47,13 +47,14 @@
 <script setup>
 import { ref } from "vue";
 import { api } from "src/boot/axios";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import useApp from "src/composables/app";
 
 const name = ref("");
 const password = ref("");
 const showPasword = ref(false);
 const router = useRouter();
+const route = useRoute();
 const { preserveUser } = useApp();
 const usernameLogin = ref(false);
 
@@ -67,9 +68,13 @@ const submit = () => {
     },
   }).then(({ data }) => {
     preserveUser(data);
-    router.replace({
-      name: "index",
-    });
+    try {
+      router.replace(JSON.parse(atob(route.query.redirect)));
+    } catch (error) {
+      router.replace({
+        name: "index",
+      });
+    }
   });
 };
 </script>

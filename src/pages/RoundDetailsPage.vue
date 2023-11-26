@@ -38,7 +38,7 @@
         icon="receipt"
         color="purple"
         @click="showReceipt = true"
-        v-if="order"
+        v-if="luckyOrder"
       />
     </div>
 
@@ -124,7 +124,7 @@
     <div
       class="col-12 absolute-center full-width row flex-center text-center"
       style="background-color: rgba(0, 0, 0, 0.5)"
-      v-if="round.status == 2 && order && showReceipt"
+      v-if="round.status == 2 && luckyOrder && showReceipt"
     >
       <q-btn
         icon="close"
@@ -139,9 +139,9 @@
         leave-active-class="animated bounceOut"
         @after-leave="showReceipt = false"
       >
-        <ConfettiContainer v-if="order.status == 3 && showReceiptDialog">
+        <ConfettiContainer v-if="luckyOrder.status == 3 && showReceiptDialog">
           <OrderReceipt
-            :order="order"
+            :order="luckyOrder"
             receipt-background="#8A8A8A"
             :code="Number(round.code)"
           />
@@ -176,7 +176,7 @@ const selectedCodes = ref([]);
 const router = useRouter();
 const { preserveUser } = useApp();
 const appStore = useAppStore();
-const order = ref(null);
+const luckyOrder = ref(null);
 const showReceipt = ref(true);
 const showReceiptDialog = ref(true);
 const ticketDisplayType = ref(1);
@@ -187,15 +187,17 @@ watch(round, () => {
       method: "GET",
       url: `orders/${round.value.ticket?.order_id}`,
     }).then(({ data }) => {
-      order.value = data.order;
+      luckyOrder.value = data.order;
       showReceipt.value = true;
     });
-  else order.value = false;
+  else luckyOrder.value = null;
 });
 
 watch(showReceipt, () => {
   showReceiptDialog.value = showReceipt.value;
 });
+
+watch(selectedCodes, () => {});
 
 const settle = () => {
   dialog({
@@ -249,44 +251,57 @@ const copyLinkToClipboard = () => {
     });
 };
 
-const tickets = computed(() => {
+const tickets = ref([]);
+
+const generateTickets = () => {
   const data = [];
   for (let index = 0; index < round.value.max_tickets; index++) {
-    const color = getTicketColor(index);
+    // const color = getTicketColor(index);
 
-    if (
-      ticketDisplayType.value == 2 &&
-      ["black", "red", "purble", "orange"].includes(color)
-    )
-      continue;
-    else if (ticketDisplayType.value == 3 && color != "black") continue;
+    // if (
+    //   ticketDisplayType.value == 2 &&
+    //   ["black", "red", "purble", "orange"].includes(color)
+    // )
+    //   continue;
+    // else if (ticketDisplayType.value == 3 && color != "black") continue;
 
-    data.push({
-      code: toDigits(index, String(round.value.max_tickets - 1).length),
-      color,
-      ownned:
-        appStore.getUser != null &&
-        round.value.order_details.find(
-          (e) => e.pivot.code == index && e.status == 3
-        )?.user_id == appStore.getUser.id,
-    });
+    data.push(createTicket(index));
   }
   return data;
-});
+};
+
+const createTicket = (code) => {
+  return {
+    code: toDigits(code, String(round.value.max_tickets - 1).length),
+    color: getTicketColor(code),
+    ownned:
+      appStore.getUser != null &&
+      round.value.order_details.find(
+        (e) => e.pivot.code == code && e.status == 3
+      )?.user_id == appStore.getUser.id,
+  };
+};
+
+const updateTicket = (code) => {
+  code = Number(code);
+  const index = tickets.value.findIndex((e) => code == Number(e.code));
+  tickets.value[index] = createTicket(code);
+};
 
 const selectCode = (code) => {
   code = Number(code);
   if (round.value.status == 2) return;
-  const order = round.value.order_details.find(
+  const foundOrder = round.value.order_details.find(
     (e) => e.pivot.code == code && ![4, 5].includes(e.status)
   );
-  if (!order) {
+  if (!foundOrder) {
     if (!selectedCodes.value.includes(code)) selectedCodes.value.push(code);
     else
       selectedCodes.value.splice(
         selectedCodes.value.findIndex((e) => e == code),
         1
       );
+    updateTicket(code);
   } else {
     if (appStore.getUser?.is_admin)
       dialog({
@@ -297,7 +312,7 @@ const selectCode = (code) => {
         router.push({
           name: "order-details",
           params: {
-            id: order.id,
+            id: foundOrder.id,
           },
         });
       });
@@ -330,33 +345,57 @@ const book = () => {
         round_id: round.value.id,
         codes: selectedCodes.value,
       },
-    }).then(({ data }) => {
-      const orderData = data.order;
-      if (!appStore.getUser)
-        api({
-          method: "POST",
-          url: "login",
-          data: {
-            name: phone,
-            password: phone,
-          },
-        }).then(({ data }) => {
-          preserveUser(data);
+    })
+      .then(({ data }) => {
+        const orderData = data.order;
+        if (!appStore.getUser)
+          api({
+            method: "POST",
+            url: "login",
+            data: {
+              name: phone,
+              password: phone,
+            },
+          }).then(({ data }) => {
+            preserveUser(data);
+            router.push({
+              name: "order-details",
+              params: {
+                id: orderData.id,
+              },
+            });
+          });
+        else
           router.push({
             name: "order-details",
             params: {
               id: orderData.id,
             },
           });
-        });
-      else
-        router.push({
-          name: "order-details",
-          params: {
-            id: orderData.id,
-          },
-        });
-    });
+      })
+      .catch((e) => {
+        if (e.response.status == 400) {
+          dialog({
+            title: "ဖုန်းနံပါတ်က ရှိပြီးသားဖြစ်နေတယ်",
+            message:
+              "သုံးပြီးသားဖုန်းနံပါတ်ဆိုရင် အရင် login လုပ်ပေးပါနော်။ Password မသိတော့ရင် admin ကိုအကူညီတောင်းလို့ရပါတယ်နော်။",
+            noBackdropDismiss: true,
+            cancel: true,
+          }).onOk(() => {
+            router.push({
+              name: "login",
+              query: {
+                redirect: btoa(
+                  JSON.stringify({
+                    name: "round-details",
+                    params: { id: round.value.id },
+                  })
+                ),
+              },
+            });
+          });
+        }
+      });
   };
   if (!appStore.getUser || appStore.getUser?.is_admin)
     dialog({
@@ -384,16 +423,33 @@ onMounted(() => {
     url: `rounds/${roundId}`,
   }).then(({ data }) => {
     round.value = data.round;
+    tickets.value = generateTickets();
   });
 
   laravelEcho
     .channel(`rounds.${roundId}`)
     .listen("OrderUpdated", ({ order }) => {
-      selectedCodes.value = selectedCodes.value.filter(
-        (e) => !order.tickets.map((ticket) => ticket.pivot.code).includes(e)
+      const codesToBeUnselected = selectedCodes.value.filter((e) =>
+        order.tickets.map((ticket) => ticket.pivot.code).includes(Number(e))
       );
-
-      round.value = order.round;
+      selectedCodes.value = selectedCodes.value.filter(
+        (e) => !codesToBeUnselected.includes(e)
+      );
+      order.tickets.forEach((ticket) => {
+        const index = round.value.order_details.findIndex(
+          (e) => e.pivot.code == ticket.pivot.code && e.id == order.id
+        );
+        const roundOrder = {
+          ...order,
+          pivot: { code: ticket.pivot.code },
+        };
+        if (index != -1) {
+          round.value.order_details.splice(index, 1, roundOrder);
+        } else {
+          round.value.order_details.push(roundOrder);
+        }
+        updateTicket(ticket.pivot.code);
+      });
     })
     .listen("RoundUpdated", (payload) => {
       round.value.code = payload.round.code;
