@@ -8,6 +8,7 @@
     <q-expansion-item expand-separator :label="round.item.name">
       <div class="text-subtitle1 text-center">
         <q-btn icon="info" flat round color="info" @click="showRoundInfo" />
+        <q-btn icon="photo" flat round color="teal" @click="showPictures" />
       </div>
       <div
         class="full-wdith q-my-sm q-gutter-x-md"
@@ -207,6 +208,7 @@ import { laravelEcho } from "src/boot/global-properties";
 import RoundInfoDialog from "src/components/RoundInfoDialog.vue";
 import OrderReceipt from "src/components/OrderReceipt.vue";
 import ConfettiContainer from "src/components/ConfettiContainer.vue";
+import PicturesCaroselDialog from "src/components/PicturesCaroselDialog.vue";
 
 const { vhPage } = useUtil();
 const { t } = useI18n();
@@ -262,6 +264,15 @@ const settle = () => {
     }).then(({ data }) => {
       round.value = data.round;
     });
+  });
+};
+
+const showPictures = () => {
+  dialog({
+    component: PicturesCaroselDialog,
+    componentProps: {
+      pictures: round.value.item.pictures,
+    },
   });
 };
 
