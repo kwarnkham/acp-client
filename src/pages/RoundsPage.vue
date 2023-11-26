@@ -75,13 +75,21 @@ import { debounce } from "quasar";
 import usePagination from "src/composables/pagination";
 import useUtil from "src/composables/util";
 import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
 const { vhPage } = useUtil();
 
-const { pagination, current, lastPage, updateQueryAndFetch } =
-  usePagination("rounds");
+const route = useRoute();
 const onlyOngoing = ref(true);
-const id = ref("");
+const id = ref(route.query.id);
+
+const { pagination, current, lastPage, updateQueryAndFetch } = usePagination(
+  "rounds",
+  {
+    status: onlyOngoing.value ? 1 : undefined,
+    id: id.value ? id.value : undefined,
+  }
+);
 
 watch(
   [onlyOngoing, id],
