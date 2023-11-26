@@ -14,9 +14,12 @@
               name: 'index',
             })
           "
-          class="font-great-vibes"
         >
-          Lucky Mee Mee
+          <q-img
+            :src="$ASSETS_URL + '/assets/lucky-mee-mee-text.png'"
+            width="60px"
+            fit="contain"
+          />
         </q-toolbar-title>
         <LanguageToggleButton />
       </q-toolbar>
