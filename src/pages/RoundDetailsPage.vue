@@ -5,99 +5,103 @@
     :style-fn="vhPage"
     class="column no-wrap relative-position"
   >
-    <div class="text-subtitle1 text-center">
-      <span>{{ round.item.name }}</span>
-      <q-btn icon="info" flat round color="info" @click="showRoundInfo" />
-    </div>
-    <div
-      class="full-wdith q-my-sm q-gutter-x-md"
-      v-if="
-        round.status == 2 && appStore.getUser?.is_admin && round.code != null
-      "
+    <q-expansion-item expand-separator :label="round.item.name">
+      <div class="text-subtitle1 text-center">
+        <q-btn icon="info" flat round color="info" @click="showRoundInfo" />
+      </div>
+      <div
+        class="full-wdith q-my-sm q-gutter-x-md"
+        v-if="
+          round.status == 2 && appStore.getUser?.is_admin && round.code != null
+        "
+      >
+        <q-btn
+          :label="toDigits(round.code, String(round.max_tickets - 1).length)"
+          color="purple"
+        />
+
+        <q-btn
+          icon="star"
+          color="purple"
+          v-if="round.ticket?.order_id"
+          @click="
+            $router.push({
+              name: 'order-details',
+              params: {
+                id: round.ticket.order_id,
+              },
+            })
+          "
+        />
+
+        <q-btn
+          icon="receipt"
+          color="purple"
+          @click="showReceipt = true"
+          v-if="luckyOrder"
+        />
+      </div>
+
+      <div class="full-wdith q-my-sm" v-if="appStore.getUser?.is_admin">
+        <q-btn icon="check" class="full-width" color="indigo" @click="settle" />
+      </div>
+      <div class="full-wdith q-my-sm row justify-evenly q-pb-sm">
+        <q-btn icon="share" color="blue" @click="copyLinkToClipboard" />
+        <q-btn
+          icon="payment"
+          color="blue"
+          @click="
+            $router.push({
+              name: 'round-payments',
+              params: {
+                id: round.id,
+              },
+            })
+          "
+          v-if="appStore.getUser?.is_admin"
+        />
+        <q-btn
+          :label="$t('order')"
+          no-caps
+          color="blue"
+          @click="
+            $router.push({
+              name: 'orders',
+              query: {
+                round_id: round.id,
+              },
+            })
+          "
+        />
+      </div>
+    </q-expansion-item>
+
+    <q-tabs
+      v-model="ticketDisplayType"
+      dense
+      class="text-black"
+      active-color="primary"
+      indicator-color="primary"
+      align="justify"
+      narrow-indicator
     >
-      <q-btn
-        :label="toDigits(round.code, String(round.max_tickets - 1).length)"
-        color="purple"
-      />
+      <q-tab :name="1" label="မဲအားလုံး" />
+      <q-tab :name="2" label="ကျန်မဲများ" />
+      <q-tab :name="3" label="ငွေလွဲမဲများ" v-if="appStore.getUser?.is_admin" />
+    </q-tabs>
 
-      <q-btn
-        icon="star"
-        color="purple"
-        v-if="round.ticket?.order_id"
-        @click="
-          $router.push({
-            name: 'order-details',
-            params: {
-              id: round.ticket.order_id,
-            },
-          })
-        "
-      />
+    <q-separator />
 
-      <q-btn
-        icon="receipt"
-        color="purple"
-        @click="showReceipt = true"
-        v-if="luckyOrder"
-      />
-    </div>
-
-    <div class="full-wdith q-my-sm" v-if="appStore.getUser?.is_admin">
-      <q-btn icon="check" class="full-width" color="indigo" @click="settle" />
-    </div>
-    <div class="full-wdith q-my-sm row justify-evenly">
-      <q-btn icon="share" color="blue" @click="copyLinkToClipboard" />
-      <q-btn
-        icon="payment"
-        color="blue"
-        @click="
-          $router.push({
-            name: 'round-payments',
-            params: {
-              id: round.id,
-            },
-          })
-        "
-        v-if="appStore.getUser?.is_admin"
-      />
-      <q-btn
-        :label="$t('order')"
-        no-caps
-        color="blue"
-        @click="
-          $router.push({
-            name: 'orders',
-            query: {
-              round_id: round.id,
-            },
-          })
-        "
-      />
-    </div>
-    <div class="full-wdith q-my-sm row justify-evenly">
-      <q-btn
-        label="မဲအားလုံး"
-        no-caps
-        :color="ticketDisplayType == 1 ? 'info' : 'grey'"
-        @click="ticketDisplayType = 1"
-      />
-      <q-btn
-        label="ကျန်မဲများ"
-        no-caps
-        :color="ticketDisplayType == 2 ? 'info' : 'grey'"
-        @click="ticketDisplayType = 2"
-      />
-      <q-btn
-        label="ငွေလွဲမဲများ"
-        no-caps
-        :color="ticketDisplayType == 3 ? 'info' : 'grey'"
-        @click="ticketDisplayType = 3"
-        v-if="appStore.getUser?.is_admin"
-      />
-    </div>
-
-    <q-card class="col overflow-auto">
-      <q-card-section class="row justify-evenly q-gutter-xs">
+    <q-tab-panels
+      v-model="ticketDisplayType"
+      animated
+      class="col overflow-auto"
+      swipeable
+    >
+      <q-tab-panel
+        :name="1"
+        class="row justify-evenly q-gutter-xs items-baselineitems-xs-baseline"
+      >
         <template v-for="ticket in allTickets" :key="ticket.code">
           <q-btn
             @click="selectCode(ticket.code)"
@@ -115,16 +119,48 @@
             </q-badge>
           </q-btn>
         </template>
-      </q-card-section>
-    </q-card>
+      </q-tab-panel>
 
-    <div class="q-mt-sm" v-if="selectedCodes.length">
+      <q-tab-panel
+        :name="2"
+        class="row justify-evenly q-gutter-xs items-baseline"
+      >
+        <template v-for="ticket in allTickets" :key="ticket.code">
+          <q-btn
+            @click="selectCode(ticket.code)"
+            :color="ticket.color"
+            v-if="ticket.color == undefined || ticket.color == 'green'"
+          >
+            {{ ticket.code }}
+          </q-btn>
+        </template>
+      </q-tab-panel>
+
+      <q-tab-panel
+        :name="3"
+        class="row justify-evenly q-gutter-xs items-baseline"
+        v-if="appStore.getUser?.is_admin"
+      >
+        <template v-for="ticket in allTickets" :key="ticket.code">
+          <q-btn
+            @click="selectCode(ticket.code)"
+            :color="ticket.color"
+            v-if="ticket.color == 'black'"
+          >
+            {{ ticket.code }}
+          </q-btn>
+        </template>
+      </q-tab-panel>
+    </q-tab-panels>
+
+    <div class="q-mt-sm">
       <q-btn
         :label="$t('next')"
         no-caps
         class="full-width"
         color="primary"
         @click="book"
+        :disable="!selectedCodes.length"
       />
     </div>
     <div
@@ -164,7 +200,7 @@ import UserFormDialog from "src/components/UserFormDialog.vue";
 import useApp from "src/composables/app";
 import useUtil from "src/composables/util";
 import { useAppStore } from "src/stores/app";
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 import { laravelEcho } from "src/boot/global-properties";
