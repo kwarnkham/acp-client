@@ -8,6 +8,23 @@
         no-caps
       />
     </div>
+    <div>
+      <q-input
+        v-model="id"
+        placeholder="Search by round number"
+        dense
+        type="number"
+        mode="numeric"
+        pattern="[0-9]*"
+      >
+        <template v-slot:prepend>
+          <q-icon name="tag" />
+        </template>
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+    </div>
     <q-list
       padding
       dense
@@ -30,6 +47,9 @@
           })
         "
       >
+        <q-item-section avatar v-if="round.item.pictures.length">
+          <q-img :src="round.item.pictures[0].name" />
+        </q-item-section>
         <q-item-section>
           <q-item-label :class="{ 'text-positive': round.status == 2 }"
             >#{{ round.id }}</q-item-label
@@ -60,12 +80,16 @@ const { vhPage } = useUtil();
 
 const { pagination, current, lastPage, updateQueryAndFetch } =
   usePagination("rounds");
-const onlyOngoing = ref(false);
+const onlyOngoing = ref(true);
+const id = ref("");
 
 watch(
-  onlyOngoing,
+  [onlyOngoing, id],
   debounce(() => {
-    updateQueryAndFetch({ status: onlyOngoing.value ? 1 : undefined });
+    updateQueryAndFetch({
+      status: onlyOngoing.value ? 1 : undefined,
+      id: id.value ? id.value : undefined,
+    });
   }, 500)
 );
 </script>
