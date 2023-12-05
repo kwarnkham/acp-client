@@ -31,6 +31,7 @@ export default function usePagination (url, params) {
     fetcher(query).then(({ data }) => {
       pagination.value = data.data;
       totalAmount.value = data.total_amount;
+      lastPage.value = data.data.last_page
     });
   };
 
