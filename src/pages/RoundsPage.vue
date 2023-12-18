@@ -56,6 +56,23 @@
           >
           <q-item-label caption>{{ round.item.name }}</q-item-label>
           <q-item-label overline>{{ round.item.description }}</q-item-label>
+          <q-linear-progress
+            class="q-mt-xs"
+            dark
+            stripe
+            rounded
+            size="20px"
+            color="positive"
+            :value="round.progress_percentage / 100"
+          >
+            <div class="absolute-full flex flex-center">
+              <q-badge
+                color="white"
+                text-color="primary"
+                :label="round.progress_percentage + '%'"
+              />
+            </div>
+          </q-linear-progress>
         </q-item-section>
       </q-item>
     </q-list>
