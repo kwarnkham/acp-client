@@ -142,17 +142,24 @@
         v-if="appStore.getUser?.is_admin"
       />
     </div>
-    <div
-      class="fit absolute-center"
-      style="background-color: rgba(0, 0, 0, 0.5)"
-      v-if="order.status == 3"
-    ></div>
-    <OrderReceipt
-      :order="order"
-      v-if="order.status == 3"
-      class="absolute-center"
-      receipt-background="#777777"
-    />
+    <template v-if="order.status == 3 && showReceipt">
+      <div
+        class="fit absolute-center"
+        style="background-color: rgba(0, 0, 0, 0.5)"
+      ></div>
+      <q-btn
+        icon="close"
+        class="absolute-top-right"
+        color="info"
+        v-if="appStore.getUser?.is_admin"
+        @click="showReceipt = false"
+      />
+      <OrderReceipt
+        :order="order"
+        class="absolute-center"
+        receipt-background="#777777"
+      />
+    </template>
   </q-page>
 </template>
 
@@ -171,6 +178,7 @@ import { laravelEcho } from "src/boot/global-properties";
 const { getDateDiff } = date;
 
 const { notify, dialog } = useQuasar();
+const showReceipt = ref(true);
 const route = useRoute();
 const { toDigits, buildForm } = useUtil();
 const { t } = useI18n();
