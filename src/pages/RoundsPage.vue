@@ -57,6 +57,7 @@
           <q-item-label caption>{{ round.item.name }}</q-item-label>
           <q-item-label overline>{{ round.item.description }}</q-item-label>
           <q-linear-progress
+            v-if="appStore.getUser?.is_admin"
             class="q-mt-xs"
             dark
             stripe
@@ -91,10 +92,12 @@
 import { debounce } from "quasar";
 import usePagination from "src/composables/pagination";
 import useUtil from "src/composables/util";
+import { useAppStore } from "src/stores/app";
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const { vhPage } = useUtil();
+const appStore = useAppStore();
 
 const route = useRoute();
 const onlyOngoing = ref(true);
