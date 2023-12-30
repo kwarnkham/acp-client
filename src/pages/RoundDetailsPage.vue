@@ -50,8 +50,19 @@
         />
       </div>
 
-      <div class="full-wdith q-my-sm" v-if="appStore.getUser?.is_admin">
-        <q-btn icon="check" class="full-width" color="indigo" @click="settle" />
+      <div
+        class="full-wdith q-my-sm row no-wrap justify-between"
+        v-if="appStore.getUser?.is_admin"
+      >
+        <q-btn icon="check" class="col-5" color="indigo" @click="settle" />
+        <q-btn
+          label="Stop"
+          class="col-5"
+          color="warning"
+          @click="closeRound"
+          no-caps
+          :disable="round.status == 3"
+        />
       </div>
       <div class="full-wdith q-my-sm row justify-evenly q-pb-sm">
         <q-btn icon="share" color="blue" @click="copyLinkToClipboard" />
@@ -274,6 +285,21 @@ const settle = () => {
   });
 };
 
+const closeRound = () => {
+  dialog({
+    title: "Confirm",
+    noBackdropDismiss: true,
+    cancel: true,
+  }).onOk(() => {
+    api({
+      method: "POST",
+      url: `rounds/${round.value.id}/close`,
+    }).then(({ data }) => {
+      round.value = data.round;
+    });
+  });
+};
+
 const showPictures = () => {
   dialog({
     component: PicturesCaroselDialog,
@@ -342,7 +368,7 @@ const updateTicket = (code) => {
 
 const selectCode = (code) => {
   code = Number(code);
-  if (round.value.status == 2) return;
+  if ([2, 3].includes(round.value.status)) return;
   const foundOrder = round.value.order_details.find(
     (e) => e.pivot.code == code && ![4, 5].includes(e.status)
   );
