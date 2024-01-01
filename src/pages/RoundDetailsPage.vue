@@ -136,6 +136,15 @@
             <q-badge color="positive" floating v-if="ticket.ownned">
               <q-icon name="check" style="font-size: 10px" />
             </q-badge>
+
+            <q-icon
+              v-if="ticket.protected && appStore.getUser?.is_admin"
+              name="health_and_safety"
+              size="sm"
+              color="deep-purple-9"
+              class="absolute-top-right"
+              style="transform: translate(7px, -7px)"
+            />
           </q-btn>
         </template>
       </q-tab-panel>
@@ -357,6 +366,8 @@ const createTicket = ({ code, color }) => {
       round.value.order_details.find(
         (e) => e.pivot.code == code && e.status == 3
       )?.user_id == appStore.getUser.id,
+    protected: round.value.order_details.find((e) => e.pivot.code == code)
+      ?.pivot.protected,
   };
 };
 

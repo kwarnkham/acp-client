@@ -158,6 +158,7 @@
         :order="order"
         class="absolute-center"
         receipt-background="#777777"
+        @ticket-updated="updateTicket"
       />
     </template>
   </q-page>
@@ -204,6 +205,11 @@ const paymentMethods = ref([]);
 const picture = ref();
 const note = ref("");
 const appStore = useAppStore();
+
+const updateTicket = (ticket) => {
+  const index = order.value.tickets.findIndex((e) => e.pivot.id == ticket.id);
+  order.value.tickets[index].pivot = ticket;
+};
 
 const copyNumber = (text) => {
   copyToClipboard(text).then(() => {

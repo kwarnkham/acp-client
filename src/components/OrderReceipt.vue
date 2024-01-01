@@ -11,6 +11,8 @@
           v-for="details in order.tickets"
           :key="details.id"
           :color="details.pivot.code == code ? 'purple' : 'green'"
+          @click="protect(details.pivot)"
+          class="relative-position"
         >
           {{
             toDigits(
@@ -18,6 +20,15 @@
               String(order.round.max_tickets).length - 1
             )
           }}
+
+          <q-icon
+            v-if="details.pivot.protected && appStore.getUser?.is_admin"
+            name="health_and_safety"
+            size="sm"
+            color="deep-purple-9"
+            class="absolute-top-right"
+            style="transform: translate(7px, -7px)"
+          />
         </q-btn>
       </div>
       <div class="text-center text-weight-bold q-my-md">
@@ -68,9 +79,15 @@
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
+import { api } from "src/boot/axios";
 import useUtil from "src/composables/util";
+import { useAppStore } from "src/stores/app";
 
 const { toDigits } = useUtil();
+const { dialog } = useQuasar();
+const emit = defineEmits(["ticketUpdated"]);
+const appStore = useAppStore();
 const props = defineProps({
   order: {
     type: Object,
@@ -85,9 +102,30 @@ const props = defineProps({
     default: null,
   },
 });
+
+const protect = (ticket) => {
+  dialog({
+    title: "Confirm",
+    message: `Do you want to "${
+      ticket.protected ? "unprotect" : "protect"
+    }" the ticket?`,
+    noBackdropDismiss: true,
+    cancel: true,
+  }).onOk(() => {
+    api({
+      method: "POST",
+      url: `orders/tickets/${ticket.id}/toggle-protect`,
+    }).then(({ data }) => {
+      emit("ticketUpdated", data.ticket);
+    });
+  });
+};
 </script>
 
 <style scoped lang="scss">
+::v-deep(.q-badge--outline) {
+  border: none;
+}
 .receipt {
   min-height: 400px;
   width: 80vw;
