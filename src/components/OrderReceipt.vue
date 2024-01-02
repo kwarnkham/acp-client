@@ -39,12 +39,15 @@
         <div><q-icon name="place" size="md" color="info" /></div>
         <div>{{ order.user.address }}</div>
       </div>
-      <q-separator />
-      <div class="q-mt-sm row justify-between items-center text-red">
-        <div>မဲဖွင့်မည့်ရက်</div>
-        <div>{{ order.round.settles_on.split("-").reverse().join(".") }}</div>
-      </div>
       <q-separator spaced />
+      <template v-if="order.round.settles_on">
+        <div class="q-mt-sm row justify-between items-center text-red">
+          <div>မဲဖွင့်မည့်ရက်</div>
+          <div>{{ order.round.settles_on.split("-").reverse().join(".") }}</div>
+        </div>
+        <q-separator spaced />
+      </template>
+
       <div class="q-gutter-xs row">
         <q-btn
           v-for="details in order.tickets"
@@ -71,7 +74,7 @@
         </q-btn>
       </div>
       <q-separator spaced />
-      <div class="q-mt-sm row justify-between">
+      <div class="q-mt-sm row justify-between items-center">
         <div><q-icon name="paid" size="md" color="yellow-9" /></div>
         <div>{{ order.round.price_per_ticket.toLocaleString() }} (Ks)</div>
       </div>
