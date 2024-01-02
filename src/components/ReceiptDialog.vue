@@ -1,11 +1,6 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
-    <q-card class="q-dialog-plugin">
-      <q-card-actions align="right">
-        <q-btn color="primary" label="OK" @click="onOKClick" />
-        <q-btn color="primary" label="Cancel" @click="onDialogCancel" />
-      </q-card-actions>
-    </q-card>
+    <div class="q-dialog-plugin"></div>
   </q-dialog>
 </template>
 
@@ -18,8 +13,4 @@ defineEmits([...useDialogPluginComponent.emits]);
 
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
   useDialogPluginComponent();
-
-function onOKClick() {
-  onDialogOK();
-}
 </script>

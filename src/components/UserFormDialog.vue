@@ -11,6 +11,16 @@
             <q-icon name="phone" color="green" />
           </template>
         </q-input>
+        <q-input
+          label="လိပ်စာ"
+          v-model="address"
+          required
+          type="textarea"
+          autogrow
+        >
+          <template v-slot:prepend>
+            <q-icon name="place" color="blue" /> </template
+        ></q-input>
       </q-card-section>
       <q-card-actions align="right">
         <q-btn
@@ -35,8 +45,19 @@
 import { useDialogPluginComponent } from "quasar";
 import { ref } from "vue";
 
-const name = ref("");
-const phone = ref("");
+const props = defineProps({
+  name: {
+    type: String,
+    default: "",
+  },
+  phone: {
+    type: String,
+    default: "",
+  },
+});
+const name = ref(props.name);
+const phone = ref(props.phone);
+const address = ref("");
 
 defineEmits([...useDialogPluginComponent.emits]);
 
@@ -45,6 +66,6 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
 
 const onOk = () => {
   if (name.value == "" || phone.value.vlaue == "") return;
-  onDialogOK({ name: name.value, phone: phone.value });
+  onDialogOK({ name: name.value, phone: phone.value, address: address.value });
 };
 </script>

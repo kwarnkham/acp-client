@@ -423,7 +423,7 @@ const getTicketColor = (code) => {
 };
 
 const book = () => {
-  const sendBookRequest = ({ phone, name }) => {
+  const sendBookRequest = ({ phone, name, address }) => {
     const url = appStore.getUser ? "orders" : "orders/guest";
     api({
       method: "POST",
@@ -431,6 +431,7 @@ const book = () => {
       data: {
         name: name,
         phone: phone,
+        address: address,
         round_id: round.value.id,
         codes: selectedCodes.value,
       },
@@ -454,13 +455,18 @@ const book = () => {
               },
             });
           });
-        else
+        else {
+          appStore.setUser({
+            ...JSON.parse(JSON.stringify(appStore.getUser)),
+            address: address,
+          });
           router.push({
             name: "order-details",
             params: {
               id: orderData.id,
             },
           });
+        }
       })
       .catch((e) => {
         if (e.response.status == 400) {
@@ -486,11 +492,19 @@ const book = () => {
         }
       });
   };
-  if (!appStore.getUser || appStore.getUser?.is_admin)
+  if (
+    !appStore.getUser ||
+    appStore.getUser?.is_admin ||
+    !appStore.getUser.address
+  )
     dialog({
       component: UserFormDialog,
-    }).onOk(({ phone, name }) => {
-      sendBookRequest({ phone, name });
+      componentProps: {
+        name: appStore.getUser?.name,
+        phone: appStore.getUser?.phone,
+      },
+    }).onOk(({ phone, name, address }) => {
+      sendBookRequest({ phone, name, address });
     });
   else
     dialog({
@@ -501,6 +515,7 @@ const book = () => {
       sendBookRequest({
         phone: appStore.getUser?.phone,
         name: appStore.getUser?.name,
+        address: appStore.getUser?.address,
       });
     });
 };
