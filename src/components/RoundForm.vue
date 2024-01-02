@@ -37,6 +37,7 @@
         <span>{{ $t("minute", 2) }}</span>
       </template>
     </q-input>
+    <q-input v-model="settles_on" type="date" required />
     <q-input :label="$t('note')" v-model="note" autogrow outlined />
     <div class="text-right q-mt-sm">
       <q-btn :label="$t(round ? 'update' : 'create')" no-caps type="submit" />
@@ -65,6 +66,7 @@ const pricePerTicket = ref(props.round?.price_per_ticket ?? "");
 const price = ref(props.round?.price ?? "");
 const note = ref(props.round?.note ?? "");
 const expires_in = ref(60);
+const settles_on = ref("");
 const router = useRouter();
 
 const submit = () => {
@@ -78,6 +80,7 @@ const submit = () => {
       note: note.value,
       expires_in: expires_in.value,
       item_id: props.itemId,
+      settles_on: settles_on.value,
     },
   }).then(({ data }) => {
     router.push({

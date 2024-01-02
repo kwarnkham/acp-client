@@ -2,10 +2,49 @@
   <div class="receipt rounded-borders column bg-yellow-1">
     <div class="col q-pa-sm">
       <div class="text-center text-subtitle1">
-        {{ order.amount.toLocaleString() }} (Ks)
+        {{ order.round.item.name }}
       </div>
       <q-separator spaced />
+      <div class="text-center q-mt-sm">
+        <q-img
+          v-if="order.round.item.pictures.length"
+          :src="order.round.item.pictures[0].name"
+          fit="contain"
+          height="120px"
+          width="120px"
+        >
+          <q-img
+            :src="$ASSETS_URL + '/assets/paid.png'"
+            fit="contain"
+            height="70px"
+            width="70px"
+            class="absolute-top-right"
+            style="background-color: transparent"
+        /></q-img>
+      </div>
 
+      <q-separator />
+      <div class="row q-mt-sm no-wrap justify-between">
+        <div class="row justify-between items-center">
+          <div><q-icon name="person" size="md" color="primary" /></div>
+          <div>{{ order.user.display_name }}</div>
+        </div>
+        <div class="row justify-between items-center">
+          <div><q-icon name="phone" size="md" color="green" /></div>
+          <div>{{ order.user.phone }}</div>
+        </div>
+      </div>
+      <q-separator />
+      <div class="q-mt-sm row justify-between items-center no-wrap">
+        <div><q-icon name="place" size="md" color="info" /></div>
+        <div>{{ order.user.address }}</div>
+      </div>
+      <q-separator />
+      <div class="q-mt-sm row justify-between items-center text-red">
+        <div>မဲဖွင့်မည့်ရက်</div>
+        <div>{{ order.round.settles_on.split("-").reverse().join(".") }}</div>
+      </div>
+      <q-separator spaced />
       <div class="q-gutter-xs row">
         <q-btn
           v-for="details in order.tickets"
@@ -31,49 +70,17 @@
           />
         </q-btn>
       </div>
-      <div class="text-center text-weight-bold q-my-md">
-        {{ order.round.item.name }}
-      </div>
-      <q-separator />
+      <q-separator spaced />
       <div class="q-mt-sm row justify-between">
-        <div><q-icon name="sell" size="md" color="info" /></div>
+        <div><q-icon name="paid" size="md" color="yellow-9" /></div>
         <div>{{ order.round.price_per_ticket.toLocaleString() }} (Ks)</div>
-      </div>
-      <q-separator />
-      <div class="q-mt-sm row justify-between">
-        <div><q-icon name="person" size="md" color="primary" /></div>
-        <div>{{ order.user.display_name }}</div>
-      </div>
-      <q-separator />
-      <div class="q-mt-sm row justify-between">
-        <div><q-icon name="phone" size="md" color="green" /></div>
-        <div>{{ order.user.phone }}</div>
-      </div>
-      <q-separator />
-      <div class="text-center q-mt-sm">
-        <q-img
-          v-if="order.round.item.pictures.length"
-          :src="order.round.item.pictures[0].name"
-          fit="contain"
-          height="120px"
-          width="120px"
-        >
-          <q-img
-            :src="$ASSETS_URL + '/assets/paid.png'"
-            fit="contain"
-            height="70px"
-            width="70px"
-            class="absolute-top-right"
-            style="background-color: transparent"
-        /></q-img>
       </div>
     </div>
     <div
       style="height: 50px"
-      class="relative-position footer row items-center q-px-md justify-between"
+      class="relative-position footer row items-center q-px-md justify-center"
     >
-      <div class="font-great-vibes text-weight-bold">Lucky Mee Mee</div>
-      <div class="font-great-vibes text-weight-bold">Thanks you</div>
+      ကံကောင်းပါစေ ☘️
     </div>
   </div>
 </template>

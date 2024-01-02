@@ -18,7 +18,7 @@
         />
       </div>
       <div
-        class="full-wdith q-my-sm q-gutter-x-md"
+        class="full-width q-my-sm q-gutter-x-md"
         v-if="
           round.status == 2 && appStore.getUser?.is_admin && round.code != null
         "
@@ -51,7 +51,7 @@
       </div>
 
       <div
-        class="full-wdith q-my-sm row no-wrap justify-between"
+        class="full-width q-my-sm row no-wrap justify-between"
         v-if="appStore.getUser?.is_admin"
       >
         <q-btn icon="check" class="col-5" color="indigo" @click="settle" />
@@ -64,7 +64,7 @@
           :disable="round.status == 3"
         />
       </div>
-      <div class="full-wdith q-my-sm row justify-evenly q-pb-sm">
+      <div class="full-width q-my-sm row justify-evenly q-pb-sm">
         <q-btn icon="share" color="blue" @click="copyLinkToClipboard" />
         <q-btn
           icon="payment"
@@ -500,7 +500,7 @@ const book = () => {
     dialog({
       component: UserFormDialog,
       componentProps: {
-        name: appStore.getUser?.name,
+        name: appStore.getUser?.is_admin ? undefined : appStore.getUser?.name,
         phone: appStore.getUser?.phone,
       },
     }).onOk(({ phone, name, address }) => {
