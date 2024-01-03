@@ -76,7 +76,7 @@
       <q-separator spaced />
       <div class="q-mt-sm row justify-between items-center">
         <div><q-icon name="paid" size="md" color="yellow-9" /></div>
-        <div>{{ order.round.price_per_ticket.toLocaleString() }} (Ks)</div>
+        <div>{{ order.amount }} (Ks)</div>
       </div>
     </div>
     <div
