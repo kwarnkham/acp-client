@@ -74,6 +74,7 @@
         v-model="picture"
         label="ငွေလွဲ စခရင်ရှော့ကို ဒီမှာထည့်ပေးပါနော်"
       />
+
       <q-input
         :label="$t('note')"
         v-model="note"
@@ -121,27 +122,43 @@
         </q-item-section>
       </q-item>
     </q-list>
-    <div
-      class="q-mt-md row justify-evenly"
+
+    <q-form
+      @submit.prevent="confirmOrder"
+      class=""
       v-if="[1, 2].includes(order.status)"
     >
-      <q-btn
-        :label="$t('cancel')"
-        no-caps
-        class="col-5"
-        color="negative"
-        @click="cancelOrder"
+      <q-input
+        label="Discount"
+        v-model="discount"
         v-if="appStore.getUser?.is_admin"
+        type="number"
+        mode="numeric"
+        pattern="[0-9]*"
+        :rules="[
+          (val) => val <= order.amount || 'Must be less than total amount',
+        ]"
       />
-      <q-btn
-        :label="$t('confirm')"
-        no-caps
-        class="col-5"
-        color="positive"
-        @click="confirmOrder"
-        v-if="appStore.getUser?.is_admin"
-      />
-    </div>
+      <div class="q-mt-md row justify-evenly">
+        <q-btn
+          :label="$t('cancel')"
+          no-caps
+          class="col-5"
+          color="negative"
+          @click="cancelOrder"
+          v-if="appStore.getUser?.is_admin"
+        />
+        <q-btn
+          type="submit"
+          :label="$t('confirm')"
+          no-caps
+          class="col-5"
+          color="positive"
+          v-if="appStore.getUser?.is_admin"
+        />
+      </div>
+    </q-form>
+
     <template v-if="order.status == 3 && showReceipt">
       <div
         class="fit absolute-center"
@@ -185,6 +202,7 @@ const { toDigits, buildForm } = useUtil();
 const { t } = useI18n();
 const order = ref(null);
 const { orderStatusToText } = useApp();
+
 const getTimeRemaining = () => {
   const date = new Date(
     getDateDiff(new Date(order.value.expires_at), new Date(), "seconds") * 1000
@@ -204,6 +222,7 @@ const paymentMethods = ref([]);
 
 const picture = ref();
 const note = ref("");
+const discount = ref("");
 const appStore = useAppStore();
 
 const updateTicket = (ticket) => {
@@ -221,6 +240,7 @@ const copyNumber = (text) => {
 };
 
 const confirmOrder = () => {
+  if (discount.value > order.value.amount) return;
   dialog({
     title: t("areYouSure"),
     cancel: true,
@@ -229,6 +249,9 @@ const confirmOrder = () => {
     api({
       method: "post",
       url: `orders/${order.value.id}/confirm`,
+      data: {
+        discount: discount.value || undefined,
+      },
     }).then(({ data }) => {
       order.value = data.order;
     });
@@ -249,6 +272,7 @@ const cancelOrder = () => {
     });
   });
 };
+
 const submit = () => {
   if (!picture.value) {
     notify({
@@ -263,6 +287,7 @@ const submit = () => {
     data: buildForm({
       picture: picture.value,
       note: note.value,
+      discount: discount.value || undefined,
     }),
     asForm: true,
   }).then(({ data }) => {

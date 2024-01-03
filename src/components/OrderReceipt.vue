@@ -76,7 +76,12 @@
       <q-separator spaced />
       <div class="q-mt-sm row justify-between items-center">
         <div><q-icon name="paid" size="md" color="yellow-9" /></div>
-        <div>{{ order.amount }} (Ks)</div>
+        <div>
+          {{ (order.amount - order.discount).toLocaleString() }} Ks
+          <span v-if="order.discount > 0">
+            (Discount -{{ order.discount.toLocaleString() }})</span
+          >
+        </div>
       </div>
     </div>
     <div
