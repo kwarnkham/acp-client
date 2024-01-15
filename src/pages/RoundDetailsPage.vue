@@ -54,10 +54,16 @@
         class="full-width q-my-sm row no-wrap justify-between"
         v-if="appStore.getUser?.is_admin"
       >
-        <q-btn icon="check" class="col-5" color="indigo" @click="settle" />
+        <q-btn icon="check" class="col-3" color="indigo" @click="settle" />
+        <q-btn
+          icon="health_and_safety"
+          class="col-3"
+          :color="modeProtection ? 'primary' : 'grey'"
+          @click="modeProtection = !modeProtection"
+        />
         <q-btn
           label="Stop"
-          class="col-5"
+          class="col-3"
           color="warning"
           @click="closeRound"
           no-caps
@@ -251,6 +257,7 @@ const luckyOrder = ref(null);
 const showReceipt = ref(true);
 const showReceiptDialog = ref(true);
 const ticketDisplayType = ref(1);
+const modeProtection = ref(false);
 
 watch(round, () => {
   if (round.value.ticket?.order_id)
@@ -358,17 +365,16 @@ const generateTickets = () => {
 };
 
 const createTicket = ({ code, color }) => {
+  const order = round.value.order_details.find(
+    (e) => e.pivot.code == code && e.status == 3
+  );
+
   return {
+    id: order?.pivot?.id,
     code: toDigits(code, String(round.value.max_tickets - 1).length),
     color,
-    ownned:
-      appStore.getUser != null &&
-      round.value.order_details.find(
-        (e) => e.pivot.code == code && e.status == 3
-      )?.user_id == appStore.getUser.id,
-    protected: round.value.order_details.find(
-      (e) => e.pivot.code == code && e.status == 3
-    )?.pivot.protected,
+    ownned: appStore.getUser != null && order?.user_id == appStore.getUser.id,
+    protected: order?.pivot?.protected,
   };
 };
 
@@ -393,19 +399,32 @@ const selectCode = (code) => {
       );
     updateTicket(code);
   } else {
-    if (appStore.getUser?.is_admin)
-      dialog({
-        title: "Check order details?",
-        noBackdropDismiss: true,
-        cancel: true,
-      }).onOk(() => {
-        router.push({
-          name: "order-details",
-          params: {
-            id: foundOrder.id,
-          },
+    if (appStore.getUser?.is_admin) {
+      if (modeProtection.value) {
+        const ticket = allTickets.value.find((e) => e.code == code);
+        api({
+          method: "POST",
+          url: `orders/tickets/${ticket.id}/toggle-protect`,
+        }).then(({ data }) => {
+          const index = allTickets.value.findIndex(
+            (e) => e.id == data.ticket.id
+          );
+          allTickets.value[index].protected = data.ticket.protected;
         });
-      });
+      } else
+        dialog({
+          title: "Check order details?",
+          noBackdropDismiss: true,
+          cancel: true,
+        }).onOk(() => {
+          router.push({
+            name: "order-details",
+            params: {
+              id: foundOrder.id,
+            },
+          });
+        });
+    }
   }
 };
 
