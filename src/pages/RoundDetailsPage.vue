@@ -366,8 +366,9 @@ const createTicket = ({ code, color }) => {
       round.value.order_details.find(
         (e) => e.pivot.code == code && e.status == 3
       )?.user_id == appStore.getUser.id,
-    protected: round.value.order_details.find((e) => e.pivot.code == code)
-      ?.pivot.protected,
+    protected: round.value.order_details.find(
+      (e) => e.pivot.code == code && e.status == 3
+    )?.pivot.protected,
   };
 };
 
