@@ -1,11 +1,24 @@
 <template>
   <q-page padding :style-fn="vhPage" class="column no-wrap">
-    <div class="text-center q-mb-sm">
+    <div class="text-center q-mb-sm q-gutter-x-sm">
       <q-btn
-        label="မပြိးသေးသော round များသာ"
-        @click="onlyOngoing = !onlyOngoing"
-        :color="onlyOngoing ? 'primary' : 'grey'"
-        no-caps
+        flat
+        @click="toggleStatusFromFilter(1)"
+        :color="statusFilters.includes(1) ? 'positive' : 'grey'"
+      >
+        <q-spinner-radio size="sm" />
+      </q-btn>
+      <q-btn
+        icon="check"
+        flat
+        @click="toggleStatusFromFilter(2)"
+        :color="statusFilters.includes(2) ? 'positive' : 'grey'"
+      />
+      <q-btn
+        icon="do_not_disturb_on"
+        flat
+        @click="toggleStatusFromFilter(3)"
+        :color="statusFilters.includes(3) ? 'positive' : 'grey'"
       />
     </div>
     <div>
@@ -38,6 +51,7 @@
         :key="round.id"
         clickable
         v-ripple
+        class="q-my-xs"
         @click="
           $router.push({
             name: 'round-details',
@@ -100,24 +114,35 @@ const { vhPage } = useUtil();
 const appStore = useAppStore();
 
 const route = useRoute();
-const onlyOngoing = ref(true);
+const statusFilters = ref([1]);
 const id = ref(route.query.id);
+
+const toggleStatusFromFilter = (status) => {
+  if (statusFilters.value.includes(status)) {
+    if (statusFilters.value.length == 1) return;
+    statusFilters.value.splice(
+      statusFilters.value.findIndex((e) => e == status),
+      1
+    );
+  } else statusFilters.value.push(status);
+};
 
 const { pagination, current, lastPage, updateQueryAndFetch } = usePagination(
   "rounds",
   {
-    status: onlyOngoing.value ? 1 : undefined,
+    status: statusFilters.value.join(","),
     id: id.value ? id.value : undefined,
   }
 );
 
 watch(
-  [onlyOngoing, id],
+  [id, statusFilters],
   debounce(() => {
     updateQueryAndFetch({
-      status: onlyOngoing.value ? 1 : undefined,
+      status: statusFilters.value.join(","),
       id: id.value ? id.value : undefined,
     });
-  }, 500)
+  }, 500),
+  { deep: true }
 );
 </script>
