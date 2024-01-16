@@ -110,9 +110,15 @@
       align="justify"
       narrow-indicator
     >
-      <q-tab :name="1" label="မဲအားလုံး" />
-      <q-tab :name="2" label="ကျန်မဲများ" />
-      <q-tab :name="3" label="ငွေလွဲမဲများ" v-if="appStore.getUser?.is_admin" />
+      <q-tab :name="1" label="အားလုံး" />
+      <q-tab :name="2" label="ကျန်မဲ" />
+      <q-tab :name="3" icon="paid" v-if="appStore.getUser?.is_admin" />
+      <q-tab
+        :name="4"
+        icon="health_and_safety"
+        v-if="appStore.getUser?.is_admin"
+      />
+      <q-tab :name="5" icon="gpp_maybe" v-if="appStore.getUser?.is_admin" />
     </q-tabs>
 
     <q-separator />
@@ -172,7 +178,7 @@
 
       <q-tab-panel
         :name="3"
-        class="row justify-evenly q-gutter-xs items-baseline"
+        class="row justify-evenly q-gutter-xs content-baseline"
         v-if="appStore.getUser?.is_admin"
       >
         <template v-for="ticket in allTickets" :key="ticket.code">
@@ -180,6 +186,45 @@
             @click="selectCode(ticket.code)"
             :color="ticket.color"
             v-if="ticket.color == 'black'"
+          >
+            {{ ticket.code }}
+          </q-btn>
+        </template>
+      </q-tab-panel>
+
+      <q-tab-panel
+        :name="4"
+        class="row justify-evenly q-gutter-xs content-baseline"
+        v-if="appStore.getUser?.is_admin"
+      >
+        <template v-for="ticket in allTickets" :key="ticket.code">
+          <q-btn
+            @click="selectCode(ticket.code)"
+            :color="ticket.color"
+            v-if="ticket.protected"
+          >
+            {{ ticket.code }}
+            <q-icon
+              name="health_and_safety"
+              size="sm"
+              color="deep-purple-9"
+              class="absolute-top-right"
+              style="transform: translate(7px, -7px)"
+            />
+          </q-btn>
+        </template>
+      </q-tab-panel>
+
+      <q-tab-panel
+        :name="5"
+        class="row justify-evenly q-gutter-xs content-baseline"
+        v-if="appStore.getUser?.is_admin"
+      >
+        <template v-for="ticket in allTickets" :key="ticket.code">
+          <q-btn
+            @click="selectCode(ticket.code)"
+            :color="ticket.color"
+            v-if="!ticket.protected && ticket.color == 'red'"
           >
             {{ ticket.code }}
           </q-btn>
