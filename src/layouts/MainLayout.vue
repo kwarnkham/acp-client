@@ -26,7 +26,7 @@
       <router-view
         :class="[appStore.getUser?.is_admin ? 'bg-indigo-2' : 'bg-white']"
         class="col"
-        style="max-width: 400px"
+        style="max-width: 430px"
       />
     </q-page-container>
 

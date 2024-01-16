@@ -118,13 +118,14 @@ const statusFilters = ref([1]);
 const id = ref(route.query.id);
 
 const toggleStatusFromFilter = (status) => {
-  if (statusFilters.value.includes(status)) {
-    if (statusFilters.value.length == 1) return;
-    statusFilters.value.splice(
-      statusFilters.value.findIndex((e) => e == status),
-      1
-    );
-  } else statusFilters.value.push(status);
+  // if (statusFilters.value.includes(status)) {
+  //   if (statusFilters.value.length == 1) return;
+  //   statusFilters.value.splice(
+  //     statusFilters.value.findIndex((e) => e == status),
+  //     1
+  //   );
+  // } else statusFilters.value.push(status);
+  statusFilters.value = [status];
 };
 
 const { pagination, current, lastPage, updateQueryAndFetch } = usePagination(
