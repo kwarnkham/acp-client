@@ -119,6 +119,7 @@ const props = defineProps({
 });
 
 const protect = (ticket) => {
+  if (!appStore.getUser?.is_admin) return;
   dialog({
     title: "Confirm",
     message: `Do you want to "${
